@@ -36,14 +36,15 @@ def hide_computer(label, button):
 
 labelList = []
 def roll():
-    xVal, yVal = 70, 170
+    xVal, yVal = 90, 170
 
     if len(labelList) != 0:
         for i in range(len(labelList)):
             labelList[i].destroy()
 
     for i in range(5):
-        label = Label(image=diceList[random.randint(1, 6) - 1])
+        randomDice = diceList[random.randint(1, 6) - 1]
+        label = Label(image= randomDice)
         labelList.append(label)
         label.place(x = xVal, y = yVal)
         if i % 2 == 0:
@@ -54,22 +55,27 @@ def roll():
             else:
                 xVal -= 32.5
             yVal += 60
-    labelList.append(Text(window, height=1, width=10, bg="light yellow"))
-    labelList[len(labelList)-1].pack()
+
 
 # Create Header
 headerFont = tk.font.Font(family = "Comic Sans MS", size = 40, weight = 'bold')
 header = Label(window, text="Bar Dice Game", font = headerFont, borderwidth= 3, relief = 'solid')
 header.pack()
 
-# Create User
-userFont = tk.font.Font(family = "Comic Sans MS", size = 15, weight = 'bold')
-user = Label(window, text="Input User", font = userFont).place(x = 30, y = 80)
-userEntry = Entry(window).place(x = 130, y = 80)
+# Create User Name
+userNameFont = tk.font.Font(family = "Comic Sans MS", size = 15, weight = 'bold')
+userName = Label(window, text="Input User", font = userNameFont).place(x = 30, y = 80)
+userNameEntry = Entry(window).place(x = 130, y = 80)
 
 # Create a Button
 btn = Button(window, text='Roll!', bd='10', command=roll)
 btn.place(x = 130, y = 120)
+
+# Create User Game input
+userGInputFont = tk.font.Font(family = "Comic Sans MS", size = 15, weight = 'bold')
+userGInput = Label(window, text="What's your move?: ", font = userNameFont).place(x = 30, y = 350)
+userGInputEntry = Entry(window).place(x = 30, y = 380)
+
 
 window.mainloop()
 

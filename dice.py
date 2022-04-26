@@ -1,7 +1,7 @@
 import random
 
-import gen_sql_tables
-import populate_tables
+import gen_table
+import populate_table
 
 from scipy.special import binom, factorial
 
@@ -20,7 +20,7 @@ while(len(set(d2)) == len(d2)):
     for i in range(0, 5):
         n = random.randint(1, 6)
         d2.append(n)
-        
+
 def open(d1, d2, n, k):
     count = 0
     for x in range(0, 5):
@@ -55,7 +55,7 @@ def check(current, n, k):
         return True
 
 if __name__ == '__main__':
-    gen = gen_sql_tables.generate_table()
+    gen = gen_table.generate_table()
     print("Welcome to the BAR DICE!")
     rounds = int(input("How any rounds would you like to play?"))
     counter = 0
@@ -71,11 +71,14 @@ if __name__ == '__main__':
         print("YOUR DICE: ",d1)
         
         while(not opened):
+            win = 0
+            winner = ""
             if(count > 0) and input("Do you want to open? y/n") == "y":
                 if open(d1, d2, current[0], current[1]):
                     print("YOU WIN!!")
                 else:
                     print("YOU LOSE!!")
+                    win = 1
                 opened = True
             else:
                 a, b = input("Enter two values: ").split()
@@ -95,14 +98,23 @@ if __name__ == '__main__':
                         print("Computer's move: ", num + 1, val)
                 else:
                     print("Computer opens the cup!")
-                    pop = populate_tables.populate()
+                    
                     if open(d1, d2, num, val):
                         print("YOU LOSE!!")
+                        win = 1
                     else:
                         print("YOU WIN!!")
                     opened = True
                 count += 1
-            
+        if win == 0:
+            winner = "User"
+        else:
+            winner = "AI"
+        d1String = ','.join(str(d) for d in d1)
+        d2String = ','.join(str(d) for d in d2)
+        populate_table.populate(d1String, d2String, winner)
+
+        
         print(d1)
         print(d2)
         counter += 1

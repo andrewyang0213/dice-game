@@ -1,6 +1,6 @@
 import mysql.connector
 
-def populate():
+def populate(user, ai, winner):
     try:
     #establishing the connection
         conn = mysql.connector.connect(
@@ -10,15 +10,15 @@ def populate():
         #Creating a cursor object using the cursor() method
         cursor = conn.cursor()
 
-        #Dropping EMPLOYEE table if already exists.
-        cursor.execute("DROP TABLE IF EXISTS DICE_RESULTS")
-
         #Creating table as per requirement
-        sql = '''insert into DICE_RESULTS(USER_DICE, AI_DICE) values (1, 2)'''
-        cursor.execute(sql)
+        sql = '''insert into DICE_RESULTS(USER_DICE, AI_DICE, WINNER) values (%s, %s, %s)'''
+        cursor.executemany(sql, [(user, ai, winner)])
+        
+        conn.commit()
 
     finally:
     #Closing the connection
         if conn.is_connected():
             conn.close()
             print("MySQL connection is closed")
+
