@@ -95,7 +95,7 @@ if __name__ == '__main__':
                         print("Computer's move: ", num + 1, val)
                 else:
                     print("Computer opens the cup!")
-                    pop = populate_tables.populate_table()
+                    pop = populate_tables.populate()
                     if open(d1, d2, num, val):
                         print("YOU LOSE!!")
                     else:

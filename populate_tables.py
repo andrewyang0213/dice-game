@@ -1,6 +1,6 @@
 import mysql.connector
 
-def populate_table():
+def populate():
     try:
     #establishing the connection
         conn = mysql.connector.connect(
