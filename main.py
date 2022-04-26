@@ -1,30 +1,42 @@
 from tkinter import *
 # create a tkinter window
 from PIL import ImageTk, Image
-from tkinter import ttk
-from tkinter import font
+import mysql.connector
 
 import tkinter as tk
 import random
 
-count = 0
+import DBHelper.LeaderboardTable.gen_lead_tb as LBGen
+import DBHelper.LeaderboardTable.ins_lead_tb as LBins
+
+
+# Initialize Leaderboard Db
+LBGen.gen_lead_tb()
+
+
 window = tk.Tk()
 
-#set window name
+# set window name
 window.title('Bar Dice Game')
 
 # Open window having dimension 100x100
-window.geometry('500x500')
+window.geometry('1000x1000')
 
 imagePath = "imgs/"
 
 diceList = []
-diceList.append(ImageTk.PhotoImage(Image.open(imagePath + "one.png").resize((50, 50))))
-diceList.append(ImageTk.PhotoImage(Image.open(imagePath + "two.png").resize((50, 50))))
-diceList.append(ImageTk.PhotoImage(Image.open(imagePath + "three.png").resize((50, 50))))
-diceList.append(ImageTk.PhotoImage(Image.open(imagePath + "four.png").resize((50, 50))))
-diceList.append(ImageTk.PhotoImage(Image.open(imagePath + "five.png").resize((50, 50))))
-diceList.append(ImageTk.PhotoImage(Image.open(imagePath + "six.png").resize((50, 50))))
+diceList.append(ImageTk.PhotoImage(
+    Image.open(imagePath + "one.png").resize((50, 50))))
+diceList.append(ImageTk.PhotoImage(
+    Image.open(imagePath + "two.png").resize((50, 50))))
+diceList.append(ImageTk.PhotoImage(Image.open(
+    imagePath + "three.png").resize((50, 50))))
+diceList.append(ImageTk.PhotoImage(Image.open(
+    imagePath + "four.png").resize((50, 50))))
+diceList.append(ImageTk.PhotoImage(Image.open(
+    imagePath + "five.png").resize((50, 50))))
+diceList.append(ImageTk.PhotoImage(
+    Image.open(imagePath + "six.png").resize((50, 50))))
 print(len(diceList))
 
 ''' def show_computer(label,button):
@@ -35,6 +47,8 @@ def hide_computer(label, button):
    button.configure(command=show_computer()) '''
 
 labelList = []
+
+
 def roll():
     xVal, yVal = 90, 170
 
@@ -44,9 +58,9 @@ def roll():
 
     for i in range(5):
         randomDice = diceList[random.randint(1, 6) - 1]
-        label = Label(image= randomDice)
+        label = Label(image=randomDice)
         labelList.append(label)
-        label.place(x = xVal, y = yVal)
+        label.place(x=xVal, y=yVal)
         if i % 2 == 0:
             xVal += 65
         else:
@@ -58,26 +72,91 @@ def roll():
 
 
 # Create Header
-headerFont = tk.font.Font(family = "Comic Sans MS", size = 40, weight = 'bold')
-header = Label(window, text="Bar Dice Game", font = headerFont, borderwidth= 3, relief = 'solid')
+headerFont = tk.font.Font(family="Comic Sans MS", size=40, weight='bold')
+header = Label(window, text="Bar Dice Game", font=headerFont,
+               borderwidth=3, relief='solid')
 header.pack()
 
-# Create User Name
-userNameFont = tk.font.Font(family = "Comic Sans MS", size = 15, weight = 'bold')
-userName = Label(window, text="Input User", font = userNameFont).place(x = 30, y = 80)
-userNameEntry = Entry(window).place(x = 130, y = 80)
+# Create Leaderboard Header
+LBHeaderFont = tk.font.Font(family="Comic Sans MS", size=40, weight='bold')
+LBHeader = Label(window, text="LeaderBoard", font=headerFont,
+                 borderwidth=3, relief='solid')
+LBHeader.place(x=700, y=100)
 
-# Create a Button
+# Create User Name
+userNameFont = tk.font.Font(family="Comic Sans MS", size=15, weight='bold')
+userName = Label(window, text="Input User",
+                 font=userNameFont).place(x=30, y=80)
+userNameEntry = Entry(window)
+userNameEntry.place(x=130, y=80)
+my_str = tk.StringVar()
+l5 = tk.Label(window, textvariable=my_str, width=10)
+l5.pack()
+my_str.set("Output")
+
+# Create add User Data Button
+b1 = tk.Button(window,  text='Add Record',
+               width=10, command=lambda: add_data())
+b1.pack()
+
+# Create data validation & mysql connection
+
+
+def add_data():
+    flag_validation = True  # set the flag
+    my_name = userNameEntry.get()  # read name
+    # my_class=options.get()    # read class
+    # my_mark=t3.get("1.0",END) # read mark
+    # my_gender=radio_v.get()   # read gender
+
+    # length of my_name , my_class and my_gender more than 2
+    if(len(my_name) < 2):  # or len(my_class)<2  or len(my_gender) < 2 ):
+        flag_validation = False
+
+    if(flag_validation):
+        LBins.ins_lead_tb([my_name])
+    else:
+        l5.config(fg='red')   # foreground color
+        l5.config(bg='yellow')  # background color
+        my_str.set("check inputs.")
+
+# Create Leaderboard Widget
+
+
+def select_lead_tb():
+    conn = mysql.connector.connect(
+        user='root', password='ubercharge1', host='localhost', database='dice_game')
+    cursor = conn.cursor()
+    cursor.execute(
+        '''SELECT PLAYER FROM LEADERBOARD where PLAYER > '' limit 0,10''')
+    i = 0
+    for fields in cursor:
+        for j in range(len(fields)):
+            e = Entry(window, width=10, fg='blue')
+            e.place(x=700, y=150)  # grid(row=i, column=j)
+            e.insert(END, fields[j])
+        i = i+1
+    conn.close()
+
+
+select_lead_tb()
+
+# Create Refresh Leaderboard button
+btn = Button(window, text='Refresh', bd='10', command=select_lead_tb)
+btn.place(x=900, y=180)
+
+# Create Roll Button
 btn = Button(window, text='Roll!', bd='10', command=roll)
-btn.place(x = 130, y = 120)
+btn.place(x=130, y=120)
 
 # Create User Game input
-userGInputFont = tk.font.Font(family = "Comic Sans MS", size = 15, weight = 'bold')
-userGInput = Label(window, text="What's your move?: ", font = userNameFont).place(x = 30, y = 350)
-userGInputEntry = Entry(window).place(x = 30, y = 380)
-
+userGInputFont = tk.font.Font(family="Comic Sans MS", size=15, weight='bold')
+userGInput = Label(window, text="What's your move?: ",
+                   font=userNameFont).place(x=30, y=350)
+userGInputEntry = Entry(window).place(x=30, y=380)
 
 window.mainloop()
+
 
 ''' game_frame = Frame(window)
 game_frame.pack()
@@ -115,7 +194,6 @@ values=('6','ZaqueriBlack','106','Wisconsin' , 'TONY'))
 
 my_game.insert(parent='',index='end',iid=6,text='',
 values=('6','ZaqueriBlack','106','Wisconsin' , 'TONY')) '''
-
 
 
 ''' my_game.pack() '''
