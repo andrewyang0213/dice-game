@@ -2,17 +2,18 @@ from tkinter import *
 # create a tkinter window
 from PIL import ImageTk, Image
 from tkinter import ttk
+from tkinter import font
+
+import tkinter as tk
 import random
 
 count = 0
-root = Tk()
+root = tk.Tk()
 
 # Open window having dimension 100x100
-root.geometry('100x100')
+root.geometry('500x500')
 
 imagePath = "imgs/"
-
-print("hi")
 
 diceList = []
 diceList.append(ImageTk.PhotoImage(Image.open(imagePath + "one.png").resize((50, 50))))
@@ -50,7 +51,15 @@ def roll():
 btn = Button(root, text='Roll!', bd='5',
              command=roll)
 
-game_frame = Frame(root)
+
+headerFont = tk.font.Font(family = "Comic Sans MS", size = 40, weight = 'bold')
+header = Label(root, text="Bar Dice Game", font = headerFont) #bg="yellow"
+header.pack()
+btn.pack()
+
+root.mainloop()
+
+''' game_frame = Frame(root)
 game_frame.pack()
 
 my_game = ttk.Treeview(game_frame)
@@ -85,13 +94,8 @@ my_game.insert(parent='',index='end',iid=5,text='',
 values=('6','ZaqueriBlack','106','Wisconsin' , 'TONY'))
 
 my_game.insert(parent='',index='end',iid=6,text='',
-values=('6','ZaqueriBlack','106','Wisconsin' , 'TONY'))
+values=('6','ZaqueriBlack','106','Wisconsin' , 'TONY')) '''
 
 
 
-header = Label(root, text="SHAI ZI", bg="yellow")
-header.pack()
-btn.pack()
-my_game.pack()
-
-root.mainloop()
+''' my_game.pack() '''
