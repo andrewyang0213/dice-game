@@ -8,10 +8,13 @@ import tkinter as tk
 import random
 
 count = 0
-root = tk.Tk()
+window = tk.Tk()
+
+#set window name
+window.title('Bar Dice Game')
 
 # Open window having dimension 100x100
-root.geometry('500x500')
+window.geometry('500x500')
 
 imagePath = "imgs/"
 
@@ -41,25 +44,23 @@ def roll():
         label = Label(image=diceList[random.randint(1, 6) - 1])
         labelList.append(label)
         label.pack()
-    labelList.append(Text(root, height=1, width=10, bg="light yellow"))
+    labelList.append(Text(window, height=1, width=10, bg="light yellow"))
     labelList[len(labelList)-1].pack()
 
 
 
 
 # Create a Button
-btn = Button(root, text='Roll!', bd='5',
-             command=roll)
-
+btn = Button(window, text='Roll!', bd='10', command=roll)
 
 headerFont = tk.font.Font(family = "Comic Sans MS", size = 40, weight = 'bold')
-header = Label(root, text="Bar Dice Game", font = headerFont) #bg="yellow"
+header = Label(window, text="Bar Dice Game", font = headerFont, borderwidth= 3, relief = 'solid') #bg="yellow"
 header.pack()
 btn.pack()
 
-root.mainloop()
+window.mainloop()
 
-''' game_frame = Frame(root)
+''' game_frame = Frame(window)
 game_frame.pack()
 
 my_game = ttk.Treeview(game_frame)
