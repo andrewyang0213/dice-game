@@ -1,6 +1,6 @@
 import mysql.connector
 
-def generate_table():
+def gen_lead_tb():
     #establishing the connection
     conn = mysql.connector.connect(
     user='root', password='ubercharge1', host='localhost', database='dice_game'
@@ -13,11 +13,14 @@ def generate_table():
     for db in cursor:
         print(db) '''
 
-    #Dropping table if already exists.
-    cursor.execute('DROP TABLE IF EXISTS DICE_RESULTS')
-
     #Creating table
-    sql = '''create table DICE_RESULTS(TRIALS int auto_increment, USER_DICE varchar(200), AI_DICE varchar(200), MOVES varchar(200), END_MOVE varchar(200), WINNER varchar(200), constraint DICE_RESULTS_pk primary key (TRIALS))'''
+    sql = '''create table if not exists LEADERBOARD(
+                        RANKING int not null, 
+                        PLAYER varchar(200), 
+                        WINS int not null, 
+                        WIN_PERCENT int not null,
+                        TOTAL_GAMES int)
+            '''
     try:
         cursor.execute(sql)
         print('table created')

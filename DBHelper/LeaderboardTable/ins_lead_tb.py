@@ -1,6 +1,6 @@
 import mysql.connector
 
-def populate(user, ai, winner):
+def ins_lead_tb(user):
     try:
     #establishing the connection
         conn = mysql.connector.connect(
@@ -11,8 +11,8 @@ def populate(user, ai, winner):
         cursor = conn.cursor()
 
         #Creating table as per requirement
-        sql = '''insert into DICE_RESULTS(USER_DICE, AI_DICE, WINNER) values (%s, %s, %s)'''
-        cursor.executemany(sql, [(user, ai, winner)])
+        sql = '''insert into LEADERBOARD(PLAYER) values (%s)'''
+        cursor.execute(sql, user)
         
         conn.commit()
 

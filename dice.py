@@ -1,7 +1,7 @@
 import random
 
-import gen_table
-import populate_table
+import DBHelper.ResultTable.gen_res_tb as resGen
+import DBHelper.ResultTable.ins_res_tb as resIns
 
 from scipy.special import binom, factorial
 
@@ -55,7 +55,7 @@ def check(current, n, k):
         return True
 
 if __name__ == '__main__':
-    gen = gen_table.generate_table()
+    gen = resGen.gen_res_tb()
     print("Welcome to the BAR DICE!")
     rounds = int(input("How any rounds would you like to play?"))
     counter = 0
@@ -112,7 +112,7 @@ if __name__ == '__main__':
             winner = "AI"
         d1String = ','.join(str(d) for d in d1)
         d2String = ','.join(str(d) for d in d2)
-        populate_table.populate(d1String, d2String, winner)
+        resIns.ins_res_tb(d1String, d2String, winner)
 
         
         print(d1)
