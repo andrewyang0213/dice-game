@@ -1,7 +1,7 @@
 import random
 
 import gen_sql_tables
-import pop_sql_tables
+import populate_tables
 
 from scipy.special import binom, factorial
 
@@ -95,7 +95,7 @@ if __name__ == '__main__':
                         print("Computer's move: ", num + 1, val)
                 else:
                     print("Computer opens the cup!")
-                    pop = pop_sql_tables.populate_table()
+                    pop = populate_tables.populate_table()
                     if open(d1, d2, num, val):
                         print("YOU LOSE!!")
                     else:
