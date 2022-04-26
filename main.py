@@ -12,6 +12,8 @@ root.geometry('100x100')
 
 imagePath = "imgs/"
 
+print("hi")
+
 diceList = []
 diceList.append(ImageTk.PhotoImage(Image.open(imagePath + "one.png").resize((50, 50))))
 diceList.append(ImageTk.PhotoImage(Image.open(imagePath + "two.png").resize((50, 50))))
