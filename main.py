@@ -8,10 +8,13 @@ import tkinter as tk
 import random
 
 count = 0
-root = tk.Tk()
+window = tk.Tk()
+
+#set window name
+window.title('Bar Dice Game')
 
 # Open window having dimension 100x100
-root.geometry('500x500')
+window.geometry('500x500')
 
 imagePath = "imgs/"
 
@@ -24,15 +27,17 @@ diceList.append(ImageTk.PhotoImage(Image.open(imagePath + "five.png").resize((50
 diceList.append(ImageTk.PhotoImage(Image.open(imagePath + "six.png").resize((50, 50))))
 print(len(diceList))
 
-def show_computer(label,button):
+''' def show_computer(label,button):
    label.pack()
    button.configure(command=hide_computer())
 def hide_computer(label, button):
    label.pack_forget()
-   button.configure(command=show_computer())
+   button.configure(command=show_computer()) '''
 
 labelList = []
 def roll():
+    xVal, yVal = 70, 170
+
     if len(labelList) != 0:
         for i in range(len(labelList)):
             labelList[i].destroy()
@@ -40,26 +45,35 @@ def roll():
     for i in range(5):
         label = Label(image=diceList[random.randint(1, 6) - 1])
         labelList.append(label)
-        label.pack()
-    labelList.append(Text(root, height=1, width=10, bg="light yellow"))
+        label.place(x = xVal, y = yVal)
+        if i % 2 == 0:
+            xVal += 65
+        else:
+            if i != 3:
+                xVal -= 65
+            else:
+                xVal -= 32.5
+            yVal += 60
+    labelList.append(Text(window, height=1, width=10, bg="light yellow"))
     labelList[len(labelList)-1].pack()
 
+# Create Header
+headerFont = tk.font.Font(family = "Comic Sans MS", size = 40, weight = 'bold')
+header = Label(window, text="Bar Dice Game", font = headerFont, borderwidth= 3, relief = 'solid')
+header.pack()
 
-
+# Create User
+userFont = tk.font.Font(family = "Comic Sans MS", size = 15, weight = 'bold')
+user = Label(window, text="Input User", font = userFont).place(x = 30, y = 80)
+userEntry = Entry(window).place(x = 130, y = 80)
 
 # Create a Button
-btn = Button(root, text='Roll!', bd='5',
-             command=roll)
+btn = Button(window, text='Roll!', bd='10', command=roll)
+btn.place(x = 130, y = 120)
 
+window.mainloop()
 
-headerFont = tk.font.Font(family = "Comic Sans MS", size = 40, weight = 'bold')
-header = Label(root, text="Bar Dice Game", font = headerFont) #bg="yellow"
-header.pack()
-btn.pack()
-
-root.mainloop()
-
-''' game_frame = Frame(root)
+''' game_frame = Frame(window)
 game_frame.pack()
 
 my_game = ttk.Treeview(game_frame)
