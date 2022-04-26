@@ -10,13 +10,15 @@ root = Tk()
 # Open window having dimension 100x100
 root.geometry('100x100')
 
+imagePath = "imgs/"
+
 diceList = []
-diceList.append(ImageTk.PhotoImage(Image.open("one.png").resize((50, 50))))
-diceList.append(ImageTk.PhotoImage(Image.open("two.png").resize((50, 50))))
-diceList.append(ImageTk.PhotoImage(Image.open("three.png").resize((50, 50))))
-diceList.append(ImageTk.PhotoImage(Image.open("four.png").resize((50, 50))))
-diceList.append(ImageTk.PhotoImage(Image.open("five.png").resize((50, 50))))
-diceList.append(ImageTk.PhotoImage(Image.open("six.png").resize((50, 50))))
+diceList.append(ImageTk.PhotoImage(Image.open(imagePath + "one.png").resize((50, 50))))
+diceList.append(ImageTk.PhotoImage(Image.open(imagePath + "two.png").resize((50, 50))))
+diceList.append(ImageTk.PhotoImage(Image.open(imagePath + "three.png").resize((50, 50))))
+diceList.append(ImageTk.PhotoImage(Image.open(imagePath + "four.png").resize((50, 50))))
+diceList.append(ImageTk.PhotoImage(Image.open(imagePath + "five.png").resize((50, 50))))
+diceList.append(ImageTk.PhotoImage(Image.open(imagePath + "six.png").resize((50, 50))))
 print(len(diceList))
 
 def show_computer(label,button):
