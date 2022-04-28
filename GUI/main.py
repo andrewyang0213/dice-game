@@ -11,7 +11,7 @@ import init_dice as initD
 
 
 # Initialize Leaderboard Db
-LBGen.gen_lead_tb()
+#LBGen.gen_lead_tb()
 
 # Initialize Tkinter obj
 window = tk.Tk()
@@ -62,31 +62,31 @@ def roll():
 headerFont = tk.font.Font(family="Comic Sans MS", size=40, weight='bold')
 header = Label(window, text="Bar Dice Game", font=headerFont,
                borderwidth=3, relief='solid')
-header.pack()
+header.grid(row = 1, column = 1)
 
 # Create Leaderboard Header
 LBHeaderFont = tk.font.Font(family="Comic Sans MS", size=40, weight='bold')
 LBHeader = Label(window, text="LeaderBoard", font=headerFont,
                  borderwidth=3, relief='solid')
-LBHeader.place(x=700, y=100)
+LBHeader.grid(row = 1, column = 2)
 
 # Create User Name
 userNameFont = tk.font.Font(family="Comic Sans MS", size=15, weight='bold')
 userName = Label(window, text="Input User",
-                 font=userNameFont).place(x=30, y=80)
+                 font=userNameFont).grid(row = 2, column = 2)
 userNameEntry = Entry(window)
 userNameEntry.place(x=130, y=80)
 my_str = tk.StringVar()
 l5 = tk.Label(window, textvariable=my_str, width=10)
-l5.pack()
+l5.grid(row = 2, column = 2)
 my_str.set("Output")
 
 # Create add User Data Button
 b1 = tk.Button(window,  text='Add Record',
                width=10, command=lambda: add_data())
-b1.pack()
+b1.grid()
 
-# Create data validation & mysql connection
+''' # Create data validation & mysql connection
 def add_data():
     flag_validation = True  # set the flag
     my_name = userNameEntry.get()  # read name
@@ -103,7 +103,7 @@ def add_data():
     else:
         l5.config(fg='red')   # foreground color
         l5.config(bg='yellow')  # background color
-        my_str.set("check inputs.")
+        my_str.set("check inputs.") '''
 
 # Create Leaderboard Widget
 def select_lead_tb():
