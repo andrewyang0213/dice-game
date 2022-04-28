@@ -1,5 +1,6 @@
 import mysql.connector
 
+
 def gen_lead_tb():
     #establishing the connection
     conn = mysql.connector.connect(

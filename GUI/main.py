@@ -1,19 +1,19 @@
 from tkinter import *
 # create a tkinter window
-from PIL import ImageTk, Image
+from tkinter import font
 import mysql.connector
-
 import tkinter as tk
 import random
 
 import DBHelper.LeaderboardTable.gen_lead_tb as LBGen
 import DBHelper.LeaderboardTable.ins_lead_tb as LBins
+import init_dice as initD
 
 
 # Initialize Leaderboard Db
 LBGen.gen_lead_tb()
 
-
+# Initialize Tkinter obj
 window = tk.Tk()
 
 # set window name
@@ -22,22 +22,7 @@ window.title('Bar Dice Game')
 # Open window having dimension 100x100
 window.geometry('1000x1000')
 
-imagePath = "imgs/"
 
-diceList = []
-diceList.append(ImageTk.PhotoImage(
-    Image.open(imagePath + "one.png").resize((50, 50))))
-diceList.append(ImageTk.PhotoImage(
-    Image.open(imagePath + "two.png").resize((50, 50))))
-diceList.append(ImageTk.PhotoImage(Image.open(
-    imagePath + "three.png").resize((50, 50))))
-diceList.append(ImageTk.PhotoImage(Image.open(
-    imagePath + "four.png").resize((50, 50))))
-diceList.append(ImageTk.PhotoImage(Image.open(
-    imagePath + "five.png").resize((50, 50))))
-diceList.append(ImageTk.PhotoImage(
-    Image.open(imagePath + "six.png").resize((50, 50))))
-print(len(diceList))
 
 ''' def show_computer(label,button):
    label.pack()
@@ -46,8 +31,11 @@ def hide_computer(label, button):
    label.pack_forget()
    button.configure(command=show_computer()) '''
 
-labelList = []
 
+diceList = initD.init_dice()
+
+# Create Roll Function
+labelList = []
 
 def roll():
     xVal, yVal = 90, 170
@@ -69,7 +57,6 @@ def roll():
             else:
                 xVal -= 32.5
             yVal += 60
-
 
 # Create Header
 headerFont = tk.font.Font(family="Comic Sans MS", size=40, weight='bold')
@@ -100,8 +87,6 @@ b1 = tk.Button(window,  text='Add Record',
 b1.pack()
 
 # Create data validation & mysql connection
-
-
 def add_data():
     flag_validation = True  # set the flag
     my_name = userNameEntry.get()  # read name
@@ -121,8 +106,6 @@ def add_data():
         my_str.set("check inputs.")
 
 # Create Leaderboard Widget
-
-
 def select_lead_tb():
     conn = mysql.connector.connect(
         user='root', password='ubercharge1', host='localhost', database='dice_game')
@@ -137,7 +120,6 @@ def select_lead_tb():
             e.insert(END, fields[j])
         i = i+1
     conn.close()
-
 
 select_lead_tb()
 
