@@ -4,6 +4,7 @@ from tkinter import font
 import mysql.connector
 import tkinter as tk
 import random
+from PIL import ImageTk, Image
 
 import DBHelper.LeaderboardTable.gen_lead_tb as LBGen
 import DBHelper.LeaderboardTable.ins_lead_tb as LBins
@@ -11,7 +12,7 @@ import init_dice as initD
 
 
 # Initialize Leaderboard Db
-#LBGen.gen_lead_tb()
+LBGen.gen_lead_tb()
 
 # Initialize Tkinter obj
 window = tk.Tk()
@@ -19,10 +20,21 @@ window = tk.Tk()
 # set window name
 window.title('Bar Dice Game')
 
-# Open window having dimension 100x100
-window.geometry('1000x1000')
+# Open window fullscreen
+width= window.winfo_screenwidth()               
+height= window.winfo_screenheight()               
+window.geometry("%dx%d" % (width, height))
+
+''' # Open window having dimension 100x100
+window.geometry('1000x1000') '''
 
 
+
+bg = ImageTk.PhotoImage(Image.open("/Users/andrewyang/Desktop/Spring Semester/Randomness/dice-game/GUI/imgs/background.png").resize((width, height)))
+  
+# Show image using label
+label1 = Label(window, image = bg)
+label1.place(x = 0, y = 0)
 
 ''' def show_computer(label,button):
    label.pack()
@@ -38,55 +50,63 @@ diceList = initD.init_dice()
 labelList = []
 
 def roll():
-    xVal, yVal = 90, 170
+    xVal, yVal = 0.45, 0.35
 
     if len(labelList) != 0:
         for i in range(len(labelList)):
             labelList[i].destroy()
 
     for i in range(5):
+        print(i)
+        print(xVal, yVal)
         randomDice = diceList[random.randint(1, 6) - 1]
         label = Label(image=randomDice)
         labelList.append(label)
-        label.place(x=xVal, y=yVal)
+        label.place(relx=xVal, rely=yVal, anchor = CENTER)
         if i % 2 == 0:
-            xVal += 65
+            xVal += 0.1
         else:
             if i != 3:
-                xVal -= 65
+                xVal -= 0.1
             else:
-                xVal -= 32.5
-            yVal += 60
+                xVal -= 0.05
+            yVal += 0.1
 
 # Create Header
 headerFont = tk.font.Font(family="Comic Sans MS", size=40, weight='bold')
-header = Label(window, text="Bar Dice Game", font=headerFont,
-               borderwidth=3, relief='solid')
-header.grid(row = 1, column = 1)
+header = Label(window, text=" Bar Dice Game ", font=headerFont,
+               borderwidth=4, relief='solid')
+header.place(relx = 0.5, rely = 0.1, anchor = CENTER)
+
+# Create Rules Header
+headerFont = tk.font.Font(family="Comic Sans MS", size=40, weight='bold')
+header = Label(window, text=" Rules ", font=headerFont,
+               borderwidth=4, relief='solid')
+header.place(relx = 0.15, rely = 0.1, anchor = CENTER)
 
 # Create Leaderboard Header
 LBHeaderFont = tk.font.Font(family="Comic Sans MS", size=40, weight='bold')
-LBHeader = Label(window, text="LeaderBoard", font=headerFont,
-                 borderwidth=3, relief='solid')
-LBHeader.grid(row = 1, column = 2)
+LBHeader = Label(window, text=" LeaderBoard ", font=headerFont,
+                 borderwidth=4, relief='solid')
+LBHeader.place(relx=0.8, rely=0.1, anchor=CENTER)
 
 # Create User Name
 userNameFont = tk.font.Font(family="Comic Sans MS", size=15, weight='bold')
 userName = Label(window, text="Input User",
-                 font=userNameFont).grid(row = 2, column = 2)
+                 font=userNameFont).place(relx=0.4, rely=0.2, anchor = CENTER)
 userNameEntry = Entry(window)
-userNameEntry.place(x=130, y=80)
+userNameEntry.place(relx = 0.5, rely= 0.2, anchor=CENTER)
 my_str = tk.StringVar()
 l5 = tk.Label(window, textvariable=my_str, width=10)
-l5.grid(row = 2, column = 2)
-my_str.set("Output")
+l5.place(relx = 0.6, rely= 0.2, anchor=CENTER)
+my_str.set(" ")
 
 # Create add User Data Button
-b1 = tk.Button(window,  text='Add Record',
+b1 = tk.Button(window,  text='Add User',
                width=10, command=lambda: add_data())
-b1.grid()
+b1.place(relx = 0.5, rely = 0.25, anchor=CENTER)
 
-''' # Create data validation & mysql connection
+# Create data validation & mysql connection
 def add_data():
     flag_validation = True  # set the flag
     my_name = userNameEntry.get()  # read name
@@ -103,7 +123,7 @@ def add_data():
     else:
         l5.config(fg='red')   # foreground color
         l5.config(bg='yellow')  # background color
-        my_str.set("check inputs.") '''
+        my_str.set("Invalid Input")
 
 # Create Leaderboard Widget
 def select_lead_tb():
@@ -116,7 +136,7 @@ def select_lead_tb():
     for fields in cursor:
         for j in range(len(fields)):
             e = Entry(window, width=10, fg='blue')
-            e.place(x=700, y=150)  # grid(row=i, column=j)
+            e.place(relx = 0.8, rely= 0.25, anchor=CENTER)
             e.insert(END, fields[j])
         i = i+1
     conn.close()
@@ -125,17 +145,27 @@ select_lead_tb()
 
 # Create Refresh Leaderboard button
 btn = Button(window, text='Refresh', bd='10', command=select_lead_tb)
-btn.place(x=900, y=180)
+btn.place(relx = 0.875, rely= 0.17, anchor= CENTER)
 
 # Create Roll Button
-btn = Button(window, text='Roll!', bd='10', command=roll)
-btn.place(x=130, y=120)
+btn = Button(window, text='Roll Dice!', bd='10', command=roll)
+btn.place(relx = 0.5, rely= 0.6, anchor=CENTER)
 
 # Create User Game input
 userGInputFont = tk.font.Font(family="Comic Sans MS", size=15, weight='bold')
-userGInput = Label(window, text="What's your move?: ",
-                   font=userNameFont).place(x=30, y=350)
-userGInputEntry = Entry(window).place(x=30, y=380)
+userGInput = Label(window, text="What's Your Move?: ",
+                   font=userNameFont).place(relx = 0.5, rely= 0.65, anchor=CENTER)
+userGInputEntry = Entry(window).place(relx = 0.5, rely= 0.7, anchor=CENTER)
+
+# Create User Input Button
+btn = Button(window, text='Confirm Move', bd='10', command=roll)
+btn.place(relx = 0.5, rely= 0.75, anchor=CENTER)
+
+# Create AI Move Header
+userGInputFont = tk.font.Font(family="Comic Sans MS", size=15, weight='bold')
+userGInput = Label(window, text="Computer's Move: ",
+                   font=userNameFont).place(relx = 0.5, rely= 0.8, anchor=CENTER)
+
 
 window.mainloop()
 
