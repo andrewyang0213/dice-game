@@ -16,7 +16,7 @@ def gen_lead_tb():
 
     #Creating table
     sql = '''create table if not exists LEADERBOARD(
-                        USER_ID int auto_increment
+                        PLAYER_ID int auto_increment
                         RANKING int not null, 
                         PLAYER varchar(200), 
                         WINS int not null, 
