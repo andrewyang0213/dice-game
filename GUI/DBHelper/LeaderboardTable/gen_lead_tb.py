@@ -16,11 +16,13 @@ def gen_lead_tb():
 
     #Creating table
     sql = '''create table if not exists LEADERBOARD(
+                        USER_ID int auto_increment
                         RANKING int not null, 
                         PLAYER varchar(200), 
                         WINS int not null, 
                         WIN_PERCENT int not null,
-                        TOTAL_GAMES int)
+                        TOTAL_GAMES int,
+                        constraint DICE_RESULTS_pk primary key (TRIALS))
             '''
     try:
         cursor.execute(sql)
