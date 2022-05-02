@@ -12,7 +12,7 @@ import init_dice as initD
 
 
 # Initialize Leaderboard Db
-LBGen.gen_lead_tb()
+""" LBGen.gen_lead_tb() """
 
 # Initialize Tkinter obj
 window = tk.Tk()
@@ -30,7 +30,7 @@ window.geometry('1000x1000') '''
 
 
 
-bg = ImageTk.PhotoImage(Image.open("/Users/andrewyang/Desktop/Spring Semester/Randomness/dice-game/GUI/imgs/background.png").resize((width, height)))
+bg = ImageTk.PhotoImage(Image.open("imgs/background.png").resize((width, height)))
   
 # Show image using label
 label1 = Label(window, image = bg)
@@ -78,11 +78,24 @@ header = Label(window, text=" Bar Dice Game ", font=headerFont,
                borderwidth=4, relief='solid')
 header.place(relx = 0.5, rely = 0.1, anchor = CENTER)
 
-# Create Rules Header
+# Create Rules Header and Rules text widget
 headerFont = tk.font.Font(family="Comic Sans MS", size=40, weight='bold')
 header = Label(window, text=" Rules ", font=headerFont,
                borderwidth=4, relief='solid')
 header.place(relx = 0.15, rely = 0.1, anchor = CENTER)
+
+
+# Create text widget and specify size.
+T = Text(window, height = 8, width = 35)
+ 
+Rules = """1.Roll and guess how many dices are there in total.
+2.Make a move! for example, you can say, 5x4s, or open the cups. 
+3.Make a move again after the computer makes its move.
+4.Good luck!"""
+Font_tuple = ("Comic Sans MS", 17, "bold")
+T.configure(font = Font_tuple)
+T.insert(tk.END, Rules)
+T.place(relx = 0.15, rely = 0.3, anchor = CENTER)
 
 # Create Leaderboard Header
 LBHeaderFont = tk.font.Font(family="Comic Sans MS", size=40, weight='bold')
@@ -93,7 +106,7 @@ LBHeader.place(relx=0.8, rely=0.1, anchor=CENTER)
 # Create User Name
 userNameFont = tk.font.Font(family="Comic Sans MS", size=15, weight='bold')
 userName = Label(window, text="Input User",
-                 font=userNameFont).place(relx=0.4, rely=0.2, anchor = CENTER)
+                 font=userNameFont, borderwidth=4, relief='solid').place(relx=0.4, rely=0.2, anchor = CENTER)
 userNameEntry = Entry(window)
 userNameEntry.place(relx = 0.5, rely= 0.2, anchor=CENTER)
 my_str = tk.StringVar()
@@ -102,9 +115,9 @@ l5.place(relx = 0.6, rely= 0.2, anchor=CENTER)
 my_str.set(" ")
 
 # Create add User Data Button
-b1 = tk.Button(window,  text='Add User',
+""" b1 = tk.Button(window,  text='Add User',
                width=10, command=lambda: add_data())
-b1.place(relx = 0.5, rely = 0.25, anchor=CENTER)
+b1.place(relx = 0.5, rely = 0.25, anchor=CENTER) """
 
 # Create data validation & mysql connection
 def add_data():
@@ -141,7 +154,7 @@ def select_lead_tb():
         i = i+1
     conn.close()
 
-select_lead_tb()
+""" select_lead_tb() """
 
 # Create Refresh Leaderboard button
 btn = Button(window, text='Refresh', bd='10', command=select_lead_tb)
@@ -149,22 +162,22 @@ btn.place(relx = 0.875, rely= 0.17, anchor= CENTER)
 
 # Create Roll Button
 btn = Button(window, text='Roll Dice!', bd='10', command=roll)
-btn.place(relx = 0.5, rely= 0.6, anchor=CENTER)
+btn.place(relx = 0.5, rely= 0.7, anchor=CENTER)
 
 # Create User Game input
 userGInputFont = tk.font.Font(family="Comic Sans MS", size=15, weight='bold')
 userGInput = Label(window, text="What's Your Move?: ",
-                   font=userNameFont).place(relx = 0.5, rely= 0.65, anchor=CENTER)
-userGInputEntry = Entry(window).place(relx = 0.5, rely= 0.7, anchor=CENTER)
+                   font=userNameFont, borderwidth=3, relief='solid').place(relx = 0.5, rely= 0.75, anchor=CENTER)
+userGInputEntry = Entry(window).place(relx = 0.5, rely= 0.8, anchor=CENTER)
 
 # Create User Input Button
 btn = Button(window, text='Confirm Move', bd='10', command=roll)
-btn.place(relx = 0.5, rely= 0.75, anchor=CENTER)
+btn.place(relx = 0.5, rely= 0.85, anchor=CENTER)
 
 # Create AI Move Header
 userGInputFont = tk.font.Font(family="Comic Sans MS", size=15, weight='bold')
 userGInput = Label(window, text="Computer's Move: ",
-                   font=userNameFont).place(relx = 0.5, rely= 0.8, anchor=CENTER)
+                   font=userNameFont, borderwidth=3, relief='solid').place(relx = 0.5, rely= 0.9, anchor=CENTER)
 
 
 window.mainloop()
