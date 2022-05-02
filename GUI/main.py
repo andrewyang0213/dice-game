@@ -146,11 +146,13 @@ def select_lead_tb():
     cursor.execute(
         '''SELECT PLAYER FROM LEADERBOARD where PLAYER > '' limit 0,10''')
     i = 0
+    xVal, yVal= 0.8, 0.25
     for fields in cursor:
         for j in range(len(fields)):
             e = Entry(window, width=10, fg='blue')
-            e.place(relx = 0.8, rely= 0.25, anchor=CENTER)
+            e.place(relx = xVal, rely= yVal, anchor=CENTER)
             e.insert(END, fields[j])
+
         i = i+1
     conn.close()
 
