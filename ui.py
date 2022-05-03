@@ -5,41 +5,20 @@ import tkinter as tk
 import random
 from PIL import ImageTk, Image
 
-''' import DBHelper.LeaderboardTable.gen_lead_tb as LBGen
-import DBHelper.LeaderboardTable.ins_lead_tb as LBins '''
-import init_dice as initD
+import GUI.DBHelper.LeaderboardTable.gen_lead_tb as LBGen
+import GUI.DBHelper.LeaderboardTable.ins_lead_tb as LBins
+from GUI import dice as initD
+import datetime
+import time
+import markov
+import threading
 
 #/Users/andrewyang/Desktop/Spring Semester/Randomness/dice-game/GUI/imgs/
 
-imagePath = "imgs/"
+imagePath = "/Users/andrewyang/Desktop/Spring Semester/Randomness/dice-game/GUI/imgs/"
 
 # Initialize Leaderboard Db
-''' LBGen.gen_lead_tb() '''
-
-
-class MainApplication(tk.Tk):
-    def __init__(self, *args, **kwargs):
-        super().__init__()
-        self.parent = tk.Frame(self)
-        # Configure root window
-        self.title('Bar Dice Game')
-        # Open window fullscreen
-        self.width = self.winfo_screenwidth()
-        self.height = self.winfo_screenheight()
-        self.geometry("%dx%d" % (self.width, self.height))
-        # Show Background using label
-        self.image = ImageTk.PhotoImage(Image.open(
-            imagePath + "background.png").resize((self.width, self.height)))
-        self.background = Label(self, image=self.image)
-        self.background.place(x=0, y=0)
-        # Fetch all classes
-        self.header = Header(self, self.parent, *args, **kwargs)
-        self.rules = Rules(self, self.parent, *args, **kwargs)
-        self.user = User(self, self.parent, *args, **kwargs)
-        self.dice = Dice(self, self.parent, *args, **kwargs)
-        self.computer = Computer(self, self.parent, *args, **kwargs)
-        self.leaderboard = Leaderboard(self, self.parent, *args, **kwargs)
-
+LBGen.gen_lead_tb()
 
 class Header(tk.Frame):
     def __init__(self, parent, *args, **kwargs):
@@ -122,7 +101,7 @@ class User(tk.Frame):
         if(len(self.my_name) < 2) or any(str.isdigit(c) for c in self.my_name):
             flag_validation = False
         if(flag_validation):
-            ''' LBins.ins_lead_tb([self.my_name]) '''
+            LBins.ins_lead_tb([self.my_name])
         else:
             self.popUp.set("Invalid Input")
             self.checkLabel.config(fg='red')   # foreground color
@@ -133,6 +112,8 @@ class User(tk.Frame):
 class Dice(tk.Frame):
     def __init__(self, parent, *args, **kwargs):
         tk.Frame.__init__(self, parent)
+
+        self.parent = parent
         # Create Dice Frame
         dFWidth, dFHeight = 375, 400
         self.frame = Frame(parent, width=dFWidth,
@@ -144,7 +125,7 @@ class Dice(tk.Frame):
         font = tk.font.Font(
             family="Comic Sans MS", size=15, weight='bold')
         self.button = Button(self.frame, text='Roll Dice!', font=font,
-                             bd='10', command=self.roll)
+                             bd='10', command=lambda :[self.roll(), self.getAIMove()])
         self.button.place(relx=0.5, rely=0.55, anchor=CENTER)
         # Create User Game input
         inputFont = tk.font.Font(
@@ -156,8 +137,16 @@ class Dice(tk.Frame):
         self.entry.place(relx=0.5, rely=0.775, anchor=CENTER)
         # Create confirm input button
         self.confirm = Button(self.frame, text='Confirm Move', font=inputFont,
-                              bd='10', command=self.getUserInput)
+                              bd='10', command= self.getUserInput)
         self.confirm.place(relx=0.5, rely=0.88, anchor=CENTER)
+    
+    def getAIMove(self):
+        self.parent.getAIMove()
+
+    # Get user input
+    def getUserInput(self):
+        self.entry.get()
+        
     # Create Roll Function
 
     def roll(self):
@@ -179,10 +168,6 @@ class Dice(tk.Frame):
                 else:
                     xVal -= 0.1
                 yVal += 0.15
-    # Get user input
-
-    def getUserInput(self):
-        self.entry.get()
 
 
 class Computer(tk.Frame):
@@ -205,12 +190,27 @@ class Computer(tk.Frame):
             self.frame, textvariable=self.move, font=aiHeaderFont)
         self.moveLabel.place(relx=0.5, rely=0.7, anchor=CENTER)
         self.move.set(" ")
-    # Get AI Move
 
     def getAIMove(self):
         self.moveLabel.config(borderwidth=3, relief='solid')
-        self.move.set(" Invalid Input ")
+        self.move.set("hi")
 
+    '''  self.getAIMove()
+        timecnt = markov.timecnt(parent, self.move) '''
+
+'''     # Get AI Move
+    def getAIMove(self):
+        thd = threading.Thread(target=markov.timecnt(self, self.move))   # timer thread
+        thd.daemon = True
+        thd.start() 
+        self.moveLabel.config(borderwidth=3, relief='solid')
+        
+def eventhandler(evt, lbl):  # runs in main thread
+    print('Event Thread',threading.get_ident())   # event thread id (same as main)
+    print(evt.state)  # 123, data from event
+    string = datetime.datetime.now().strftime('%I:%M:%S %p')
+    lbl.config(text=string)  # update widget
+    #txtvar.set(' '*15 + str(evt.state))  # update text entry in main thread '''
 
 class Leaderboard(tk.Frame):
     def __init__(self, parent, *args, **kwargs):
@@ -261,7 +261,36 @@ class Leaderboard(tk.Frame):
             yVal += 0.05
         conn.close()
 
+class MainApplication(tk.Tk):
+    def __init__(self, *args, **kwargs):
+        super().__init__()
+        self.parent = tk.Frame(self)
+        # Configure root window
+        self.title('Bar Dice Game')
+        # Open window fullscreen
+        self.width = self.winfo_screenwidth()
+        self.height = self.winfo_screenheight()
+        self.geometry("%dx%d" % (self.width, self.height))
+        # Show Background using label
+        self.image = ImageTk.PhotoImage(Image.open(
+            imagePath + "background.png").resize((self.width, self.height)))
+        self.background = Label(self, image=self.image)
+        self.background.place(x=0, y=0)
+        # Fetch all classes
+        self.header = Header(self, self.parent, *args, **kwargs)
+        self.rules = Rules(self, self.parent, *args, **kwargs)
+        self.user = User(self, self.parent, *args, **kwargs)
+        self.computer = Computer(self, self.parent, *args, **kwargs)
+        self.dice = Dice(self, self.parent, *args, **kwargs)
+        self.leaderboard = Leaderboard(self, self.parent, *args, **kwargs)
+    
+    def getAIMove(self):
+        self.computer.getAIMove()
 
-if __name__ == "__main__":
+def main():
     app = MainApplication()
     app.mainloop()
+
+if __name__ == "__main__":
+    main()
+
