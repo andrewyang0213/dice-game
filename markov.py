@@ -2,12 +2,19 @@ import numpy
 import random
 import math
 from scipy.special import binom, factorial
-
-import GUI.ui as UI
+import ui as UI
 
 #MYSQL import
-''' import DBHelper.ResultTable.gen_res_tb as resGen
-import DBHelper.ResultTable.ins_res_tb as resIns '''
+import DBHelper.ResultTable.gen_res_tb as resGen
+import DBHelper.ResultTable.ins_res_tb as resIns
+
+''' def timecnt(root, txtvar):  # runs in background thread
+        print('Timer Thread',threading.get_ident())  # background thread id
+        for x in range(10):
+            root.event_generate("<<event1>>", when="tail", state=123) # trigger event in main thread
+            txtvar.set(' '*15 + str(x))  # update text entry from background thread
+            time.sleep(1) 
+ '''
 
 class database():
     def __init__(self):
@@ -23,6 +30,7 @@ class database():
     def createCall(self, who, diceNum, dicePoint):
         return who, diceNum, dicePoint
 
+
 def bluff(call, playerDice):
     numCount = 0
     for i in playerDice:
@@ -33,6 +41,7 @@ def bluff(call, playerDice):
     else:
         return numCount < call[1] / 2.0
 
+
 def callBluff(call, playerDice):
     numCount = 0
     for i in playerDice:
@@ -40,18 +49,49 @@ def callBluff(call, playerDice):
             numCount += 1
     return numCount < call[1] / 3.0
 
+
 class total():
     def __init__(self):
         self.start = [1, 2]
         self.add = [1, 2]
         self.switch = [1, 2]
         self.call = [1, 2]
+        self.markov = [[1, 1], [1, 1]]
+
+    def updateMarkov(self, game, playerDice):
+        bluffList = []
+        for i in range(len(game)):
+            if game[i][0] == 1:
+                if i == 0:
+                    bluffList.append(callBluff(game[i], playerDice))
+                elif i == 1:
+                    if game[1][2] == game[0][2]:
+                        bluffList.append(callBluff(game[i], playerDice))
+                else:
+                    if game[i][2] != game[i - 2][2] and game[i][2] == game[i - 1][2]:
+                        bluffList.append(callBluff(game[i], playerDice))
+                    else:
+                        bluffList.append(bluff(game[i], playerDice))
+        for i in range(len(bluffList) - 1):
+            if bluffList[i] == 1:
+                if bluffList[i+1] == 1:
+                    self.markov[0][0] += 1
+                else:
+                    self.markov[0][1] += 1
+            if bluffList[i] == 0:
+                if bluffList[i+1] == 1:
+                    self.markov[1][0] += 1
+                else:
+                    self.markov[1][1] += 1
 
     def printData(self):
         print(str(self.start[0]), str(self.start[1]))
         print(str(self.add[0]), str(self.add[1]))
         print(str(self.switch[0]), str(self.switch[1]))
         print(str(self.call[0]), str(self.call[1]))
+        print()
+        print(str(self.markov[0][0]), str(self.markov[0][1]))
+        print(str(self.markov[1][0]), str(self.markov[1][1]))
 
     def updateStart(self, game, playerDice):
         if game[0][0] == 1:
@@ -133,6 +173,7 @@ class total():
         print(self.call)
         print(self.start)
 
+
 def open(d1, d2, call):
     n = call[1]
     k = call[2]
@@ -148,6 +189,7 @@ def open(d1, d2, call):
         count += 1
     return count >= n
 
+
 def check(call, n, k):
     if n not in range(3, 14) or k not in range(2, 7):
         print("Out of range or wrong type of data.")
@@ -160,11 +202,13 @@ def check(call, n, k):
         return False
     return True
 
+
 def count(d2):
     counting = []
     for x in range(5):
         counting.append(d2.count(x + 2) + d2.count(1))
     return counting
+
 
 def has4(d2):
     countList = count(d2)
@@ -174,10 +218,12 @@ def has4(d2):
     else:
         return 0, 0
 
+
 def reverse(countList):
     counting = count(countList)
     counting.reverse()
     return counting
+
 
 def switch(call, computerList):
     n = call[1]
@@ -196,6 +242,7 @@ def switch(call, computerList):
             return (0, 5, val)
         return (2, n, k)
 
+
 def first_move(call, computerList):
     k = call[2]
     if 1 in computerList:
@@ -208,27 +255,42 @@ def first_move(call, computerList):
         return missing[0]
     return random.choice(list(range(k + 1, 7)))
 
+
 # type-computer start = -1 after switch = 1, after call = 2, after add = 3, after start = 4
-def play(type, d2, game, total, call):
+def play(type, d2, game, total, call, curBluff):
     num, most = has4(d2)
     if num > 0 and call[1] >= 2 * most:
-        return (2, call[1], call[2])
+        return (2, call[1], call[2]), 0
     elif num > 0 and call[2] < num:
-        return 0, call[1], num
+        return (0, call[1], num), 0
     elif num > 0:
-        return 0, call[1] + 1, num
+        return (0, call[1] + 1, num), 0
     elif type == -1:
-        return 0, 3, first_move(d2)
+        return (0, 3, first_move(d2)), 0
     else:
         playerCall = game[len(game) - 1]
         if type == 4:
             bluff = random.random() < total.getSwitchBluff()
+            if len(game) == 2:
+                newBluff = bluff
+            else:
+                while bluff != (random.random() < total.markov[curBluff][0]/(total.markov[curBluff][0]+total.markov[curBluff][1])):
+                    bluff = random.random() < total.getSwitchBluff()
+                newBluff = bluff
+
         if type == 3:
             bluff = random.random() < total.getCallBluff()
+            while bluff != random.random() < total.markov[curBluff][0]/(total.markov[curBluff][0]+total.markov[curBluff][1]):
+                bluff = random.random() < total.getSwitchBluff()
+            newBluff = bluff
         if type == 2:
             bluff = random.random() < total.getAddBluff()
+            while bluff != random.random() < total.markov[curBluff][0]/(total.markov[curBluff][0]+total.markov[curBluff][1]):
+                bluff = random.random() < total.getSwitchBluff()
+            newBluff = bluff
         if type == 1:
             bluff = random.random() < total.getStartBluff()
+            newBluff = bluff
         if bluff:
             playerCount = math.ceil(playerCall[1] / 2.0) - 1
         else:
@@ -238,17 +300,18 @@ def play(type, d2, game, total, call):
             if i == playerCall[2] or i == 1:
                 myCount += 1
         if myCount + playerCount < playerCall[1] - 1:
-            return (2, call[1], call[2])
+            return (2, call[1], call[2]), 0
         elif myCount + playerCount < playerCall[1]:
             if random.random() < 0.3:
-                return switch(call, d2)
-            return (2, call[1], call[2])
+                return switch(call, d2), newBluff
+            return (2, call[1], call[2]), 0
         elif myCount + playerCount > playerCall[1]:
-            return 0, playerCall[1] + 1, playerCall[2]
+            return (0, playerCall[1] + 1, playerCall[2]), newBluff
         else:
             if random.random() < 0.3:
-                return (2, call[1], call[2])
-            return switch(call, d2)
+                return (2, call[1], call[2]), 0
+            return (switch(call, d2)), newBluff
+
 
 def callType(gameList):
     if len(gameList) == 0:
@@ -263,10 +326,11 @@ def callType(gameList):
     else:
         return 3
 
+
 if __name__ == '__main__':
 
     #MYSQL gen table
-    ''' gen = resGen.gen_res_tb() '''
+    resGen.gen_res_tb()
 
     data = database()
     total = total()
@@ -275,9 +339,11 @@ if __name__ == '__main__':
     stats = 0.0
     counter = 0
     while rounds not in range(3, 99):
-        rounds = int(input("INVALID INPUT. Out of range or wrong type of data. Try again: "))
+        rounds = int(
+            input("INVALID INPUT. Out of range or wrong type of data. Try again: "))
     if rounds in range(3, 99):
-        print("Challenge accepted! I will play you for", rounds, "rounds! Let's begin!!!")
+        print("Challenge accepted! I will play you for",
+              rounds, "rounds! Let's begin!!!")
 
     while counter <= rounds - 1:
         call = (0, 0, 0)
@@ -285,9 +351,8 @@ if __name__ == '__main__':
         round = 0
         d1 = []
         d2 = []
-
         #MYSQL return var
-        ''' winner = "" '''
+        winner = ""
 
         while len(set(d1)) == len(d1):
             d1 = []
@@ -300,10 +365,11 @@ if __name__ == '__main__':
             for i in range(0, 5):
                 n = random.randint(1, 6)
                 d2.append(n)
-    
+
         print("YOUR DICE: ", d1)
         gameList = []
-        
+        nBluff = 0
+
         while not opened:
             if (round > 0) and input("Do you want to open? y/n") == "y":
                 if open(d1, d2, call):
@@ -313,9 +379,7 @@ if __name__ == '__main__':
                     print("YOU WIN!")
                 opened = True
             else:
-                ''' a, b = input("Enter two values: ").split() '''
-                print("Enter two values: ")
-                a, b = UI.confirmInput().split()
+                a, b = input("Enter two values: ").split()
                 num = int(a)
                 val = int(b)
 
@@ -325,7 +389,8 @@ if __name__ == '__main__':
                     val = int(b)
                 call = (1, num, val)
                 gameList.append(call)
-                call = play(callType(gameList), d2, gameList, total, call)
+                call, nBluff = play(callType(gameList), d2,
+                                    gameList, total, call, nBluff)
                 if call[0] == 2:
                     if open(d1, d2, call):
                         stats += 1
@@ -333,20 +398,21 @@ if __name__ == '__main__':
                     else:
                         print("YOU LOSE!")
                     opened = True
-
-                    #MYSQL insert
-                    ''' d1String = ','.join(str(d) for d in d1)
-                    d2String = ','.join(str(d) for d in d2)
-                    resIns.ins_res_tb(d1String, d2String, winner) '''
-
                     print("game over: opened")
                 else:
                     print(call)
+
+                    #MYSQL insert
+                    d1String = ','.join(str(d) for d in d1)
+                    d2String = ','.join(str(d) for d in d2)
+                    resIns.ins_res_tb(d1String, d2String, winner)
+
                     gameList.append(call)
                 round += 1
 
         data.data.append(gameList)
         total.updateAll(gameList, d1)
+        total.updateMarkov(gameList, d1)
         print(d1)
         print(d2)
         counter += 1
