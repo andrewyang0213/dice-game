@@ -8,7 +8,7 @@ from PIL import ImageTk, Image
 
 ''' import DBHelper.LeaderboardTable.gen_lead_tb as LBGen
 import DBHelper.LeaderboardTable.ins_lead_tb as LBins '''
-''' import init_dice as initD '''
+import init_dice as initD
 
 
 # Initialize Leaderboard Db
@@ -45,12 +45,12 @@ def hide_computer(label, button):
    label.pack_forget()
    button.configure(command=show_computer()) '''
 
-''' diceList = initD.init_dice() '''
+diceList = initD.init_dice()
 
 # Create Roll Function
 labelList = []
 
-''' def roll():
+def roll():
     xVal, yVal = 0.45, 0.35
 
     if len(labelList) != 0:
@@ -71,7 +71,7 @@ labelList = []
                 xVal -= 0.1
             else:
                 xVal -= 0.05
-            yVal += 0.1 '''
+            yVal += 0.1
 
 
 # Create Header
@@ -189,14 +189,14 @@ select_lead_tb()
 btn = Button(lBoardFrame, text='Refresh', bd= 1, command=select_lead_tb)
 btn.place(relx=0.75, rely=0.185, anchor=CENTER)
 
-''' # Create Dice Frame
+# Create Dice Frame
 dFWidth, dFHeight = 375, 500
 diceFrame = Frame(window, width = dFWidth, height = dFHeight, bd = 4, relief = 'solid')
-diceFrame.place(relx = 0.5, rely = 0.25, anchor=CENTER) '''
+diceFrame.place(relx = 0.5, rely = 0.25, anchor=CENTER)
 
-''' # Create Roll Button
+# Create Roll Button
 btn = Button(window, text='Roll Dice!', bd='10', command=roll)
-btn.place(relx=0.5, rely=0.65, anchor=CENTER) '''
+btn.place(relx=0.5, rely=0.65, anchor=CENTER)
 
 # Create User Game input
 userGInputFont = tk.font.Font(family="Comic Sans MS", size=15, weight='bold')

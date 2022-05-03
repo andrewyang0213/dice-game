@@ -3,7 +3,7 @@ import random
 import math
 from scipy.special import binom, factorial
 
-import GUI.tkinter as UI
+import GUI.ui as UI
 
 #MYSQL import
 ''' import DBHelper.ResultTable.gen_res_tb as resGen
