@@ -3,6 +3,8 @@ import random
 import math
 from scipy.special import binom, factorial
 
+import GUI.tkinter as UI
+
 #MYSQL import
 ''' import DBHelper.ResultTable.gen_res_tb as resGen
 import DBHelper.ResultTable.ins_res_tb as resIns '''
@@ -91,7 +93,6 @@ class total():
     def updateCall(self, game, playerDice):
         for i in range(1, len(game)):
             if i == 1:
-                print(game)
                 if game[1][0] == 1:
                     if game[1][2] == game[0][2]:
                         if callBluff(game[i], playerDice):
@@ -169,9 +170,9 @@ def has4(d2):
     countList = count(d2)
     most = max(countList)
     if most >= 4:
-        return countList.index(most) + 2
+        return countList.index(most) + 2, most
     else:
-        return 0
+        return 0, 0
 
 def reverse(countList):
     counting = count(countList)
@@ -201,7 +202,6 @@ def first_move(call, computerList):
         counting = count(computerList)
         for x in range(k - 1):
             counting.pop(0)
-        print(counting)
         return counting.index(min(counting)) + k + 1
     missing = list(set(range(2, 7)) - set(computerList))
     if (len(missing)) >= 1 and random.random() <= 0.7 and missing[0] > k:
@@ -210,8 +210,10 @@ def first_move(call, computerList):
 
 # type-computer start = -1 after switch = 1, after call = 2, after add = 3, after start = 4
 def play(type, d2, game, total, call):
-    num = has4(d2)
-    if num > 0 and call[2] < num:
+    num, most = has4(d2)
+    if num > 0 and call[1] >= 2 * most:
+        return (2, call[1], call[2])
+    elif num > 0 and call[2] < num:
         return 0, call[1], num
     elif num > 0:
         return 0, call[1] + 1, num
@@ -272,9 +274,9 @@ if __name__ == '__main__':
     rounds = int(input("How any rounds would you like to play?"))
     stats = 0.0
     counter = 0
-    while rounds not in range(3, 11):
+    while rounds not in range(3, 99):
         rounds = int(input("INVALID INPUT. Out of range or wrong type of data. Try again: "))
-    if rounds in range(3, 11):
+    if rounds in range(3, 99):
         print("Challenge accepted! I will play you for", rounds, "rounds! Let's begin!!!")
 
     while counter <= rounds - 1:
@@ -311,7 +313,9 @@ if __name__ == '__main__':
                     print("YOU WIN!")
                 opened = True
             else:
-                a, b = input("Enter two values: ").split()
+                ''' a, b = input("Enter two values: ").split() '''
+                print("Enter two values: ")
+                a, b = UI.confirmInput().split()
                 num = int(a)
                 val = int(b)
 
