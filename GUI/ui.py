@@ -8,6 +8,7 @@ from PIL import ImageTk, Image
 
 ''' import DBHelper.LeaderboardTable.gen_lead_tb as LBGen
 import DBHelper.LeaderboardTable.ins_lead_tb as LBins '''
+
 import init_dice as initD
 
 
@@ -34,7 +35,7 @@ imagePath = "imgs/"
 
 bg = ImageTk.PhotoImage(Image.open(imagePath + "background.png").resize((width, height)))
 
-# Show image using label
+# Show Background using label
 label1 = Label(window, image=bg)
 label1.place(x=0, y=0)
 
@@ -44,35 +45,6 @@ label1.place(x=0, y=0)
 def hide_computer(label, button):
    label.pack_forget()
    button.configure(command=show_computer()) '''
-
-diceList = initD.init_dice()
-
-# Create Roll Function
-labelList = []
-
-def roll():
-    xVal, yVal = 0.45, 0.35
-
-    if len(labelList) != 0:
-        for i in range(len(labelList)):
-            labelList[i].destroy()
-
-    for i in range(5):
-        print(i)
-        print(xVal, yVal)
-        randomDice = diceList[random.randint(1, 6) - 1]
-        label = Label(image=randomDice)
-        labelList.append(label)
-        label.place(relx=xVal, rely=yVal, anchor=CENTER)
-        if i % 2 == 0:
-            xVal += 0.1
-        else:
-            if i != 3:
-                xVal -= 0.1
-            else:
-                xVal -= 0.05
-            yVal += 0.1
-
 
 # Create Header
 headerFont = tk.font.Font(family="Comic Sans MS", size=40, weight='bold')
@@ -107,7 +79,7 @@ T.place(relx=0.15, rely=0.3, anchor=CENTER)
 # Create User Frame
 uFWidth, uFHeight = 375, 100
 userFrame = Frame(window, width = uFWidth, height = uFHeight, bd = 4, relief = 'solid')
-userFrame.place(relx = 0.5, rely = 0.25, anchor=CENTER)
+userFrame.place(relx = 0.5, rely = 0.225, anchor=CENTER)
 
 # Create User Name
 userNameFont = tk.font.Font(family="Comic Sans MS", size=15, weight='bold')
@@ -148,6 +120,76 @@ b1.place(relx=0.5, rely=0.275, anchor=CENTER) '''
         errorCanvas.itemconfigure(error, fill ='red')   # foreground color
         errorCanvas.itemconfigure(r, fill ='yellow')  # background color
         #my_str.set("Invalid Input") '''
+
+# Create Dice Frame
+dFWidth, dFHeight = 375, 400
+diceFrame = Frame(window, width = dFWidth, height = dFHeight, bd = 4, relief = 'solid')
+diceFrame.place(relx = 0.5, rely = 0.525, anchor=CENTER)
+
+# Create Roll Function
+labelList = []
+diceList = initD.init_dice()
+def roll():
+    xVal, yVal = 0.4, 0.125
+    if len(labelList) != 0:
+        for i in range(len(labelList)):
+            labelList[i].destroy()
+    for i in range(5):
+        randomDice = diceList[random.randint(1, 6) - 1]
+        label = Label(diceFrame, image=randomDice)
+        labelList.append(label)
+        label.place(relx=xVal, rely=yVal, anchor=CENTER)
+        if i % 2 == 0:
+            xVal += 0.2
+        else:
+            if i != 3:
+                xVal -= 0.2
+            else:
+                xVal -= 0.1
+            yVal += 0.15
+
+# Create Roll Button
+btn = Button(diceFrame, text='Roll Dice!', bd='10', command=roll)
+btn.place(relx=0.5, rely=0.55, anchor=CENTER)
+
+# Create User Game input
+userGInputFont = tk.font.Font(family="Comic Sans MS", size=15, weight='bold')
+userGInput = Label(diceFrame, text=" What's Your Move?: ",
+                   font=userGInputFont, borderwidth=3, relief='solid').place(relx=0.5, rely=0.675, anchor=CENTER)
+userGInputEntry = Entry(diceFrame)
+userGInputEntry.place(relx=0.5, rely=0.775, anchor=CENTER)
+
+def getUserInput():
+    print(userGInputEntry.get())
+    return userGInputEntry.get()
+
+# Create Confirm Input Button
+def confirmInput():
+    btn = Button(diceFrame, text='Confirm Move', bd='10', command=getUserInput)
+    btn.place(relx=0.5, rely=0.875, anchor=CENTER)
+
+confirmInput()
+
+# Create AI Frame
+aiFWidth, aiFHeight = 375, 100
+aiFrame = Frame(window, width = aiFWidth, height = aiFHeight, bd = 4, relief = 'solid')
+aiFrame.place(relx = 0.5, rely = 0.825, anchor=CENTER)
+
+# Create AI Move Header
+aiHeaderFont = tk.font.Font(family="Comic Sans MS", size=15, weight='bold')
+aiHeader = Label(aiFrame, text=" Computer's Move: ", font=aiHeaderFont, borderwidth=3, relief='solid')
+aiHeader.place(relx=0.5, rely=0.275, anchor=CENTER)
+
+# Create AI Move Entry
+aiMove = tk.StringVar()
+aiMoveLabel = Label(aiFrame, textvariable= aiMove, font = aiHeaderFont)
+aiMoveLabel.place(relx=0.5, rely=0.7, anchor=CENTER)
+aiMove.set(" ")
+
+# Get AI Move
+def getAIMove():
+    aiMoveLabel.config(borderwidth = 3, relief = 'solid')
+    aiMove.set(" Invalid Input ")
 
 # Create Leaderboard Frame
 lbFWidth, lbFHeight = 400, 600
@@ -194,79 +236,6 @@ def select_lead_tb():
 btn = Button(lBoardFrame, text='Refresh', bd= 1, command=select_lead_tb)
 btn.place(relx=0.75, rely=0.185, anchor=CENTER)
  '''
-# Create Dice Frame
-dFWidth, dFHeight = 375, 500
-diceFrame = Frame(window, width = dFWidth, height = dFHeight, bd = 4, relief = 'solid')
-diceFrame.place(relx = 0.5, rely = 0.25, anchor=CENTER)
-
-# Create Roll Button
-btn = Button(window, text='Roll Dice!', bd='10', command=roll)
-btn.place(relx=0.5, rely=0.65, anchor=CENTER)
-
-# Create User Game input
-userGInputFont = tk.font.Font(family="Comic Sans MS", size=15, weight='bold')
-userGInput = Label(window, text="What's Your Move?: ",
-                   font=userNameFont, borderwidth=3, relief='solid').place(relx=0.5, rely=0.75, anchor=CENTER)
-userGInputEntry = Entry(window)
-userGInputEntry.place(relx=0.5, rely=0.75, anchor=CENTER)
-
-def getUserInput():
-    print(userGInputEntry.get())
-    return userGInputEntry.get()
-
-# Create User Input Button
-def confirmInput():
-    btn = Button(window, text='Confirm Move', bd='10', command=getUserInput)
-    btn.place(relx=0.5, rely=0.8, anchor=CENTER)
-
-confirmInput()
-
-# Create AI Move Header
-userGInputFont = tk.font.Font(family="Comic Sans MS", size=15, weight='bold')
-userGInput = Label(window, text="Computer's Move: ",
-                   font=userNameFont, borderwidth=3, relief='solid').place(relx=0.5, rely=0.85, anchor=CENTER)
-
 
 #window.update()
 window.mainloop()
-
-
-''' game_frame = Frame(window)
-game_frame.pack()
-
-my_game = ttk.Treeview(game_frame)
-
-my_game['columns'] = ('player_id', 'player_name', 'player_Rank', 'player_states', 'player_city')
-
-my_game.column("#0", width=0,  stretch=NO)
-my_game.column("player_id",anchor=CENTER, width=80)
-my_game.column("player_name",anchor=CENTER,width=80)
-my_game.column("player_Rank",anchor=CENTER,width=80)
-my_game.column("player_states",anchor=CENTER,width=80)
-my_game.column("player_city",anchor=CENTER,width=80)
-
-my_game.heading("#0",text="",anchor=CENTER)
-my_game.heading("player_id",text="Id",anchor=CENTER)
-my_game.heading("player_name",text="Name",anchor=CENTER)
-my_game.heading("player_Rank",text="Rank",anchor=CENTER)
-my_game.heading("player_states",text="States",anchor=CENTER)
-my_game.heading("player_city",text="States",anchor=CENTER)
-
-my_game.insert(parent='',index='end',iid=0,text='',
-values=('1','Ninja','101','Oklahoma', 'Moore'))
-my_game.insert(parent='',index='end',iid=1,text='',
-values=('2','Ranger','102','Wisconsin', 'Green Bay'))
-my_game.insert(parent='',index='end',iid=2,text='',
-values=('3','Deamon','103', 'California', 'Placentia'))
-my_game.insert(parent='',index='end',iid=3,text='',
-values=('4','Dragon','104','New York' , 'White Plains'))
-my_game.insert(parent='',index='end',iid=4,text='',
-values=('5','CrissCross','105','California', 'San Diego'))
-my_game.insert(parent='',index='end',iid=5,text='',
-values=('6','ZaqueriBlack','106','Wisconsin' , 'TONY'))
-
-my_game.insert(parent='',index='end',iid=6,text='',
-values=('6','ZaqueriBlack','106','Wisconsin' , 'TONY')) '''
-
-
-''' my_game.pack() '''
