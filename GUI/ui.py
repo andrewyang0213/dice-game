@@ -5,8 +5,8 @@ import tkinter as tk
 import random
 from PIL import ImageTk, Image
 
-import DBHelper.LeaderboardTable.gen_lead_tb as LBGen
-import DBHelper.LeaderboardTable.ins_lead_tb as LBins
+''' import DBHelper.LeaderboardTable.gen_lead_tb as LBGen
+import DBHelper.LeaderboardTable.ins_lead_tb as LBins '''
 import init_dice as initD
 
 #/Users/andrewyang/Desktop/Spring Semester/Randomness/dice-game/GUI/imgs/
@@ -14,7 +14,7 @@ import init_dice as initD
 imagePath = "imgs/"
 
 # Initialize Leaderboard Db
-LBGen.gen_lead_tb()
+''' LBGen.gen_lead_tb() '''
 
 
 class MainApplication(tk.Tk):
@@ -122,7 +122,7 @@ class User(tk.Frame):
         if(len(self.my_name) < 2) or any(str.isdigit(c) for c in self.my_name):
             flag_validation = False
         if(flag_validation):
-            LBins.ins_lead_tb([self.my_name])
+            ''' LBins.ins_lead_tb([self.my_name]) '''
         else:
             self.popUp.set("Invalid Input")
             self.checkLabel.config(fg='red')   # foreground color
