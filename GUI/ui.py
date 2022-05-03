@@ -80,6 +80,11 @@ header = Label(window, text=" Bar Dice Game ", font=headerFont,
                borderwidth=4, relief='solid')
 header.place(relx=0.5, rely=0.1, anchor=CENTER)
 
+# Create Rules Frame
+lbFWidth, lbFHeight = 420, 600
+lBoardFrame = Frame(window, width = lbFWidth, height = lbFHeight, bd = 4, relief = 'solid')
+lBoardFrame.place(relx = 0.15, rely = 0.4, anchor=CENTER)
+
 # Create Rules Header and Rules text widget
 headerFont = tk.font.Font(family="Comic Sans MS", size=40, weight='bold')
 header = Label(window, text=" Rules ", font=headerFont,
@@ -88,7 +93,7 @@ header.place(relx=0.15, rely=0.1, anchor=CENTER)
 
 
 # Create text widget and specify size.
-T = Text(window, height=8, width=35)
+T = Text(window, height=8, width=35, borderwidth=2, relief='solid')
 
 Rules = """1.Roll and guess how many dices are there in total.
 2.Make a move! for example, you can say, 5x4s, or open the cups. 
