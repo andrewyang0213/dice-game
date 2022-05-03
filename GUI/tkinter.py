@@ -28,7 +28,9 @@ window.geometry("%dx%d" % (width, height))
 ''' # Open window having dimension 100x100
 window.geometry('1000x1000') '''
 
-imagePath = "/Users/andrewyang/Desktop/Spring Semester/Randomness/dice-game/GUI/imgs/"
+#/Users/andrewyang/Desktop/Spring Semester/Randomness/dice-game/GUI/
+
+imagePath = "imgs/"
 
 bg = ImageTk.PhotoImage(Image.open(imagePath + "background.png").resize((width, height)))
 
