@@ -183,12 +183,12 @@ def select_lead_tb():
         yVal += 0.05
     conn.close()
 
-select_lead_tb()
+''' select_lead_tb() '''
 
-# Create Refresh Leaderboard button
+''' # Create Refresh Leaderboard button
 btn = Button(lBoardFrame, text='Refresh', bd= 1, command=select_lead_tb)
 btn.place(relx=0.75, rely=0.185, anchor=CENTER)
-
+ '''
 # Create Dice Frame
 dFWidth, dFHeight = 375, 500
 diceFrame = Frame(window, width = dFWidth, height = dFHeight, bd = 4, relief = 'solid')
