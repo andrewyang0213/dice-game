@@ -53,28 +53,32 @@ header = Label(window, text=" Bar Dice Game ", font=headerFont,
 header.place(relx=0.5, rely=0.1, anchor=CENTER)
 
 # Create Rules Frame
-lbFWidth, lbFHeight = 420, 600
-lBoardFrame = Frame(window, width = lbFWidth, height = lbFHeight, bd = 4, relief = 'solid')
-lBoardFrame.place(relx = 0.15, rely = 0.4, anchor=CENTER)
+rulesFWidth, rulesFHeight = 420, 600
+rulesFrame = Frame(window, width = rulesFWidth, height = rulesFHeight, bd = 4, relief = 'solid')
+rulesFrame.place(relx = 0.175, rely = 0.5, anchor=CENTER)
 
-# Create Rules Header and Rules text widget
-headerFont = tk.font.Font(family="Comic Sans MS", size=40, weight='bold')
-header = Label(window, text=" Rules ", font=headerFont,
-               borderwidth=4, relief='solid')
-header.place(relx=0.15, rely=0.1, anchor=CENTER)
+# Create Rules Header
+rulesHeaderFont = tk.font.Font(family= "Comic Sans MS", size=40, weight='bold')
+rulesHeader = Label(rulesFrame, text= " Rules ", font = rulesHeaderFont, borderwidth=4, relief='solid')
+rulesHeader.place(relx=0.5, rely=0.15, anchor=CENTER)
 
+# Create Rules Text
+rule1 = "Roll the dice and guess how many pips there are in total."
+rule2 = "Make a move! For example, you can say, 5x4s, or you can choose to open if you don't believe your opponent."
+rule3 = "Make a move again after your opponent makes their move."
+rule4 = "Good luck!"
 
-# Create text widget and specify size.
-T = Text(window, height=8, width=35, borderwidth=2, relief='solid')
+ruleFont = tk.font.Font(family ="Comic Sans MS", size = 17, weight = "bold")
+bullet_width = ruleFont.measure("-  ")
+em = ruleFont.measure("m")
+text = Text(rulesFrame, font = ruleFont, height=15, width=35, relief='flat', bg = rulesFrame.cget('bg'), wrap = WORD)
+text.tag_configure("bulleted", lmargin1 = em, lmargin2 = em + bullet_width)
 
-Rules = """1.Roll and guess how many dices are there in total.
-2.Make a move! for example, you can say, 5x4s, or open the cups. 
-3.Make a move again after the computer makes its move.
-4.Good luck!"""
-Font_tuple = ("Comic Sans MS", 17, "bold")
-T.configure(font=Font_tuple)
-T.insert(tk.END, Rules)
-T.place(relx=0.15, rely=0.3, anchor=CENTER)
+text.insert("end", "1. " + rule1 + '\n' + '\n', "bulleted")
+text.insert("end", "2. " + rule2 + '\n' + '\n', "bulleted")
+text.insert("end", "3. " + rule3 + '\n' + '\n', "bulleted")
+text.insert("end", "4. " + rule4, "bulleted")
+text.place(relx=0.5, rely=0.6, anchor=CENTER)
 
 # Create User Frame
 uFWidth, uFHeight = 375, 100
