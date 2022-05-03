@@ -2,6 +2,7 @@ from tkinter import *
 from PIL import ImageTk, Image
 
 def init_dice():
+    #/Users/andrewyang/Desktop/Spring Semester/Randomness/dice-game/GUI/
     imagePath = "imgs/"
 
     diceList = []
