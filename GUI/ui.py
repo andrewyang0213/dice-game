@@ -222,7 +222,8 @@ userGInput = Label(window, text="Computer's Move: ",
                    font=userNameFont, borderwidth=3, relief='solid').place(relx=0.5, rely=0.85, anchor=CENTER)
 
 
-window.update()
+#window.update()
+window.mainloop()
 
 
 ''' game_frame = Frame(window)
