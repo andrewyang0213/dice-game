@@ -7,14 +7,8 @@ import ui as UI
 #MYSQL import
 import DBHelper.ResultTable.gen_res_tb as resGen
 import DBHelper.ResultTable.ins_res_tb as resIns
+import DBHelper.ResultTable.sel_user_id as resID
 
-''' def timecnt(root, txtvar):  # runs in background thread
-        print('Timer Thread',threading.get_ident())  # background thread id
-        for x in range(10):
-            root.event_generate("<<event1>>", when="tail", state=123) # trigger event in main thread
-            txtvar.set(' '*15 + str(x))  # update text entry from background thread
-            time.sleep(1) 
- '''
 
 class database():
     def __init__(self):
@@ -331,7 +325,9 @@ if __name__ == '__main__':
 
     #MYSQL gen table
     resGen.gen_res_tb()
-
+    userName = ["Andrew"]
+    userID = resID.selUserId(userName)
+    print("UserID: " + userID)
     data = database()
     total = total()
     print("Welcome to the BAR DICE!")
@@ -369,14 +365,20 @@ if __name__ == '__main__':
         print("YOUR DICE: ", d1)
         gameList = []
         nBluff = 0
-
+        d1String = ','.join(str(d) for d in d1)
+        d2String = ','.join(str(d) for d in d2)
         while not opened:
             if (round > 0) and input("Do you want to open? y/n") == "y":
                 if open(d1, d2, call):
                     print("YOU LOSE!")
+                    winner = "AI"
                 else:
                     stats += 1
                     print("YOU WIN!")
+                    winner = "PLAYER"
+                #MYSQL insert
+                print(winner)
+                resIns.ins_res_tb(userID, d1String, d2String, winner)
                 opened = True
             else:
                 a, b = input("Enter two values: ").split()
@@ -394,20 +396,22 @@ if __name__ == '__main__':
                 if call[0] == 2:
                     if open(d1, d2, call):
                         stats += 1
+                        winner = "PLAYER"
                         print("YOU WIN!")
                     else:
+                        winner = "AI"
                         print("YOU LOSE!")
+                    #MYSQL insert
+                    print(winner)
+                    resIns.ins_res_tb(userID, d1String, d2String, winner)
+
                     opened = True
                     print("game over: opened")
+                    
                 else:
                     print(call)
-
-                    #MYSQL insert
-                    d1String = ','.join(str(d) for d in d1)
-                    d2String = ','.join(str(d) for d in d2)
-                    resIns.ins_res_tb(d1String, d2String, winner)
-
                     gameList.append(call)
+                
                 round += 1
 
         data.data.append(gameList)
