@@ -198,23 +198,6 @@ class Computer(tk.Frame):
         self.moveLabel.config(borderwidth=3, relief='solid')
         self.move.set("hi")
 
-    '''  self.getAIMove()
-        timecnt = markov.timecnt(parent, self.move) '''
-
-'''     # Get AI Move
-    def getAIMove(self):
-        thd = threading.Thread(target=markov.timecnt(self, self.move))   # timer thread
-        thd.daemon = True
-        thd.start() 
-        self.moveLabel.config(borderwidth=3, relief='solid')
-        
-def eventhandler(evt, lbl):  # runs in main thread
-    print('Event Thread',threading.get_ident())   # event thread id (same as main)
-    print(evt.state)  # 123, data from event
-    string = datetime.datetime.now().strftime('%I:%M:%S %p')
-    lbl.config(text=string)  # update widget
-    #txtvar.set(' '*15 + str(evt.state))  # update text entry in main thread '''
-
 class Leaderboard(tk.Frame):
     def __init__(self, parent, *args, **kwargs):
         tk.Frame.__init__(self, parent)

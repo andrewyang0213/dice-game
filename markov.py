@@ -328,6 +328,7 @@ if __name__ == '__main__':
     userName = ["Andrew"]
     userID = resID.selUserId(userName)
     print("UserID: " + userID)
+    
     data = database()
     total = total()
     print("Welcome to the BAR DICE!")
@@ -377,7 +378,7 @@ if __name__ == '__main__':
                     print("YOU WIN!")
                     winner = "PLAYER"
                 #MYSQL insert
-                print(winner)
+                
                 resIns.ins_res_tb(userID, d1String, d2String, winner)
                 opened = True
             else:
@@ -402,7 +403,7 @@ if __name__ == '__main__':
                         winner = "AI"
                         print("YOU LOSE!")
                     #MYSQL insert
-                    print(winner)
+
                     resIns.ins_res_tb(userID, d1String, d2String, winner)
 
                     opened = True
