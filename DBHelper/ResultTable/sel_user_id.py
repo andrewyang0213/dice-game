@@ -1,6 +1,6 @@
 import mysql.connector
 
-def ins_res_tb(id, user, ai, winner):
+def selUserId(userName):
     try:
     #establishing the connection
         conn = mysql.connector.connect(
@@ -11,14 +11,14 @@ def ins_res_tb(id, user, ai, winner):
         cursor = conn.cursor()
 
         #Creating table as per requirement
-        sql = '''insert into DICE_RESULTS(PLAYER_ID, PLAYER_DICE, AI_DICE, WINNER) values (%s, %s, %s, %s)'''
-        cursor.executemany(sql, [(id, user, ai, winner)])
-        
-        conn.commit()
-
+        sql = '''SELECT PLAYER_ID FROM LEADERBOARD where PLAYER = (%s)'''
+        cursor.execute(sql, userName)
+        result = cursor.fetchall()
+        for row in result:
+            string = "".join(filter(str.isdigit, str(row)))
     finally:
     #Closing the connection
         if conn.is_connected():
             conn.close()
             print("MySQL connection is closed")
-
+    return(string)

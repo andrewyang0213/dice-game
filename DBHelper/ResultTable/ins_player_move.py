@@ -1,6 +1,6 @@
 import mysql.connector
 
-def ins_res_tb(id, user, ai, winner):
+def insUserMove(move):
     try:
     #establishing the connection
         conn = mysql.connector.connect(
@@ -12,7 +12,7 @@ def ins_res_tb(id, user, ai, winner):
 
         #Creating table as per requirement
         sql = '''insert into DICE_RESULTS(PLAYER_ID, PLAYER_DICE, AI_DICE, WINNER) values (%s, %s, %s, %s)'''
-        cursor.executemany(sql, [(id, user, ai, winner)])
+        cursor.execute(sql, move)
         
         conn.commit()
 

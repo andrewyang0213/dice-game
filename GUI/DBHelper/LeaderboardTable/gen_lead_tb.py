@@ -22,8 +22,7 @@ def gen_lead_tb():
                         WINS int not null, 
                         WIN_PERCENT int not null,
                         TOTAL_GAMES int not null,
-                        constraint DICE_RESULTS_pk primary key (PLAYER_ID))
-            '''
+                        constraint DICE_RESULTS_pk primary key (PLAYER_ID));'''
     try:
         cursor.execute(sql)
         print('table created')
