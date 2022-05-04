@@ -8,14 +8,11 @@ from PIL import ImageTk, Image
 import GUI.DBHelper.LeaderboardTable.gen_lead_tb as LBGen
 import GUI.DBHelper.LeaderboardTable.ins_lead_tb as LBins
 from GUI import dice as initD
-import datetime
-import time
-import markov
-import threading
 
-#/Users/andrewyang/Desktop/Spring Semester/Randomness/dice-game/GUI/imgs/
 
-imagePath = "/Users/andrewyang/Desktop/Spring Semester/Randomness/dice-game/GUI/imgs/"
+#/Users/andrewyang/Desktop/Spring Semester/Randomness/dice-game/
+
+imagePath = "GUI/imgs/"
 
 # Initialize Leaderboard Db
 LBGen.gen_lead_tb()

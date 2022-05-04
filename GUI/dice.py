@@ -4,7 +4,7 @@ from PIL import ImageTk, Image
 
 def init_dice():
     # /Users/andrewyang/Desktop/Spring Semester/Randomness/dice-game/GUI/
-    imagePath = "/Users/andrewyang/Desktop/Spring Semester/Randomness/dice-game/GUI/imgs/"
+    imagePath = "GUI/imgs/"
 
     diceList = []
 

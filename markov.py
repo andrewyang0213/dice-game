@@ -390,6 +390,7 @@ if __name__ == '__main__':
                     a, b = input("Enter two values again: ").split()
                     num = int(a)
                     val = int(b)
+                #1 player move, 0 computer move, 2nd two values -> move
                 call = (1, num, val)
                 gameList.append(call)
                 call, nBluff = play(callType(gameList), d2,
