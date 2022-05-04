@@ -16,11 +16,9 @@ def selUserId(userName):
         result = cursor.fetchall()
         for row in result:
             string = "".join(filter(str.isdigit, str(row)))
-            return(string)
-
     finally:
     #Closing the connection
         if conn.is_connected():
             conn.close()
             print("MySQL connection is closed")
-
+    return(string)
