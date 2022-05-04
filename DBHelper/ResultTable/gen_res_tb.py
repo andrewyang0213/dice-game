@@ -20,15 +20,17 @@ def gen_res_tb():
     sql = '''create table DICE_RESULTS(
                 TRIALS int auto_increment,
                 PLAYER_ID int not null,
-                PLAYER_DICE varchar(200) null,
-                AI_DICE varchar(200) null,
-                PLAYER_MOVE varchar(200) null,
-                AI_MOVE varchar(200) null,
-                WINNER varchar(200) null,
+                PLAYER_DICE varchar(200) not null,
+                AI_DICE varchar(200) not null,
+                PLAYER_MOVE varchar(200) not null,
+                AI_MOVE varchar(200) not null,
+                WINNER varchar(200) not null,
                 constraint DICE_RESULTS_pk
                     primary key (TRIALS),
                 constraint DICE_RESULTS_LEADERBOARD_PLAYER_ID_fk
-                    foreign key (PLAYER_ID) references LEADERBOARD (PLAYER_ID)'''
+                    foreign key (PLAYER_ID) references LEADERBOARD (PLAYER_ID) 
+                    on UPDATE CASCADE 
+                    on DELETE CASCADE);'''
     try:
         cursor.execute(sql)
         print('table created')
