@@ -107,6 +107,9 @@ class User(tk.Frame):
             self.checkLabel.config(fg='red')   # foreground color
             self.checkLabel.config(bg='yellow')  # background color
             self.checkLabel.config(borderwidth=2, relief='solid')
+    
+    def getPlayerID(self):
+        return self.entry.get()
 
 
 class Dice(tk.Frame):
@@ -239,7 +242,7 @@ class Leaderboard(tk.Frame):
             user='root', password='ubercharge1', host='localhost', database='dice_game')
         cursor = conn.cursor()
         cursor.execute(
-            '''SELECT * FROM LEADERBOARD where PLAYER > '' limit 0,10''')
+            '''SELECT * FROM LEADERBOARD order by RANKING limit 0,10''')
 
         xVal, yVal = 0.15, 0.25
         self.columnNames = ["Rank", "Player", "Wins", "Win %", "Games"]
@@ -284,6 +287,9 @@ class MainApplication(tk.Tk):
         self.dice = Dice(self, self.parent, *args, **kwargs)
         self.leaderboard = Leaderboard(self, self.parent, *args, **kwargs)
     
+    def playerID(self):
+        self.user.getPlayerID()
+
     def getAIMove(self):
         self.computer.getAIMove()
 
