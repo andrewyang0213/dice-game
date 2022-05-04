@@ -20,5 +20,5 @@ def selUserId(userName):
     #Closing the connection
         if conn.is_connected():
             conn.close()
-            print("MySQL connection is closed")
+            ''' print("MySQL connection is closed") '''
     return(string)

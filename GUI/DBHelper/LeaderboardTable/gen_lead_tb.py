@@ -31,9 +31,9 @@ def gen_lead_tb():
         exit(1)
     
     #Show tables
-    cursor.execute("show tables")
+    ''' cursor.execute("show tables")
     for tb in cursor:
-        print(tb)
+        print(tb) '''
 
     #Closing the connection
     cursor.close()

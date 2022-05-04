@@ -20,5 +20,5 @@ def ins_res_tb(id, user, ai, winner):
     #Closing the connection
         if conn.is_connected():
             conn.close()
-            print("MySQL connection is closed")
+            ''' print("MySQL connection is closed") '''
 

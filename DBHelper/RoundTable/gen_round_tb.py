@@ -1,6 +1,6 @@
 import mysql.connector
 
-def gen_res_tb():
+def gen_round_tb():
     #establishing the connection
     conn = mysql.connector.connect(
     user='root', password='ubercharge1', host='localhost', database='dice_game'
@@ -14,26 +14,19 @@ def gen_res_tb():
         print(db) '''
 
     #Dropping table if already exists.
-    cursor.execute('DROP TABLE IF EXISTS DICE_RESULTS')
+    cursor.execute('DROP TABLE IF EXISTS ROUND_INFO')
 
     #Creating table
-    sql = '''create table DICE_RESULTS(
-                TRIALS int auto_increment,
-                PLAYER_ID int not null,
-                PLAYER_DICE varchar(200) not null,
-                AI_DICE varchar(200) not null,
-                PLAYER_MOVE varchar(200) not null,
-                AI_MOVE varchar(200) not null,
-                WINNER varchar(200) not null,
+    sql = '''create table ROUND_INFO(
+                NUM int auto_increment,
+                TURN int not null,
+                MOVE varchar(200) not null,
+                OPPO_OPEN int not null,
                 constraint DICE_RESULTS_pk
-                    primary key (TRIALS),
-                constraint DICE_RESULTS_LEADERBOARD_PLAYER_ID_fk
-                    foreign key (PLAYER_ID) references LEADERBOARD (PLAYER_ID) 
-                    on UPDATE CASCADE 
-                    on DELETE CASCADE);'''
+                    primary key (NUM));'''
     try:
         cursor.execute(sql)
-        print('table created')
+        ''' print('table created') '''
     except mysql.connector.Error as err:
         print("Failed creating database: {}".format(err))
         exit(1)

@@ -1,97 +1,115 @@
 from tkinter import *
+# create a tkinter window
 from tkinter import font
 import mysql.connector
 import tkinter as tk
 import random
 from PIL import ImageTk, Image
 
-import GUI.DBHelper.LeaderboardTable.gen_lead_tb as LBGen
-import GUI.DBHelper.LeaderboardTable.ins_lead_tb as LBins
-from GUI import dice as initD
+''' import DBHelper.LeaderboardTable.gen_lead_tb as LBGen
+import DBHelper.LeaderboardTable.ins_lead_tb as LBins '''
+
+import GUI.dice as initD
 
 
-#/Users/andrewyang/Desktop/Spring Semester/Randomness/dice-game/
+# Initialize Leaderboard Db
+''' LBGen.gen_lead_tb() '''
+
+# Initialize Tkinter obj
+window = tk.Tk()
+
+# set window name
+window.title('Bar Dice Game')
+
+# Open window fullscreen
+width = window.winfo_screenwidth()
+height = window.winfo_screenheight()
+window.geometry("%dx%d" % (width, height))
+
+''' # Open window having dimension 100x100
+window.geometry('1000x1000') '''
+
+#/Users/andrewyang/Desktop/Spring Semester/Randomness/dice-game/GUI/
 
 imagePath = "GUI/imgs/"
 
-# Initialize Leaderboard Db
-LBGen.gen_lead_tb()
+bg = ImageTk.PhotoImage(Image.open(imagePath + "background.png").resize((width, height)))
 
-class Header(tk.Frame):
-    def __init__(self, parent, *args, **kwargs):
-        tk.Frame.__init__(self, parent)
-        # Create Header
-        font = tk.font.Font(family="Comic Sans MS", size=40, weight='bold')
-        self.label = Label(parent, text=" Bar Dice Game ", font=font,
-                           borderwidth=7, relief='solid')
-        self.label.place(relx=0.5, rely=0.1, anchor=CENTER)
+# Show Background using label
+label1 = Label(window, image=bg)
+label1.place(x=0, y=0)
 
+''' def show_computer(label,button):
+   label.pack()
+   button.configure(command=hide_computer())
+def hide_computer(label, button):
+   label.pack_forget()
+   button.configure(command=show_computer()) '''
 
-class Rules(tk.Frame):
-    def __init__(self, parent, *args, **kwargs):
-        tk.Frame.__init__(self, parent)
-        # Create Rules Frame
-        rulesFWidth, rulesFHeight = 420, 600
-        self.frame = Frame(parent, width=rulesFWidth,
-                           height=rulesFHeight, bd=7, relief='solid')
-        self.frame.place(relx=0.175, rely=0.5, anchor=CENTER)
-        # Create Rules Header
-        headerFont = tk.font.Font(
-            family="Comic Sans MS", size=40, weight='bold')
-        self.label = tk.Label(self.frame, text=" Rules ",
-                              font=headerFont, borderwidth=4, relief='solid')
-        self.label.place(relx=0.5, rely=0.15, anchor=CENTER)
-        # Create Rules Text
-        rule1 = "Roll the dice and guess how many pips there are in total."
-        rule2 = "Make a move! For example, you can say, 5x4s, or you can choose to open if you don't believe your opponent."
-        rule3 = "Make a move again after your opponent makes their move."
-        rule4 = "Good luck!"
+# Create Header
+headerFont = tk.font.Font(family="Comic Sans MS", size=40, weight='bold')
+header = Label(window, text=" Bar Dice Game ", font=headerFont,
+               borderwidth=7, relief='solid')
+header.place(relx=0.5, rely=0.1, anchor=CENTER)
 
-        ruleFont = tk.font.Font(family="Comic Sans MS", size=17, weight="bold")
-        bullet_width = ruleFont.measure("-  ")
-        em = ruleFont.measure("m")
-        text = Text(self.frame, font=ruleFont, height=15, width=35,
-                    relief='flat', bg=self.frame.cget('bg'), wrap=WORD)
-        text.tag_configure("bulleted", lmargin1=em, lmargin2=em + bullet_width)
+# Create Rules Frame
+rulesFWidth, rulesFHeight = 420, 600
+rulesFrame = Frame(window, width = rulesFWidth, height = rulesFHeight, bd = 7, relief = 'solid')
+rulesFrame.place(relx = 0.175, rely = 0.5, anchor=CENTER)
 
-        text.insert("end", "1. " + rule1 + '\n' + '\n', "bulleted")
-        text.insert("end", "2. " + rule2 + '\n' + '\n', "bulleted")
-        text.insert("end", "3. " + rule3 + '\n' + '\n', "bulleted")
-        text.insert("end", "4. " + rule4, "bulleted")
-        text.place(relx=0.5, rely=0.6, anchor=CENTER)
+# Create Rules Header
+rulesHeaderFont = tk.font.Font(family= "Comic Sans MS", size=40, weight='bold')
+rulesHeader = Label(rulesFrame, text= " Rules ", font = rulesHeaderFont, borderwidth=4, relief='solid')
+rulesHeader.place(relx=0.5, rely=0.15, anchor=CENTER)
 
+# Create Rules Text
+rule1 = "Roll the dice and guess how many pips there are in total."
+rule2 = "Make a move! For example, you can say, 5x4s, or you can choose to open if you don't believe your opponent."
+rule3 = "Make a move again after your opponent makes their move."
+rule4 = "Good luck!"
 
-class User(tk.Frame):
-    def __init__(self, parent, *args, **kwargs):
-        tk.Frame.__init__(self, parent)
-        # Create User Frame
-        uFWidth, uFHeight = 375, 100
-        self.frame = Frame(parent, width=uFWidth,
-                           height=uFHeight, bd=4, relief='solid')
-        self.frame.place(relx=0.5, rely=0.225, anchor=CENTER)
-        # Create User Name
-        font = tk.font.Font(family="Comic Sans MS", size=15, weight='bold')
-        self.label = Label(self.frame, text=" Input User: ",
-                           font=font, borderwidth=2, relief='solid')
-        self.label.place(relx=0.20, rely=0.275, anchor=CENTER)
-        self.entry = Entry(self.frame, width=13, font=font)
-        self.entry.place(relx=0.375, rely=0.275, anchor=W)
-        # Create popUp check
+ruleFont = tk.font.Font(family ="Comic Sans MS", size = 17, weight = "bold")
+bullet_width = ruleFont.measure("-  ")
+em = ruleFont.measure("m")
+text = Text(rulesFrame, font = ruleFont, height=15, width=35, relief='flat', bg = rulesFrame.cget('bg'), wrap = WORD)
+text.tag_configure("bulleted", lmargin1 = em, lmargin2 = em + bullet_width)
+
+text.insert("end", "1. " + rule1 + '\n' + '\n', "bulleted")
+text.insert("end", "2. " + rule2 + '\n' + '\n', "bulleted")
+text.insert("end", "3. " + rule3 + '\n' + '\n', "bulleted")
+text.insert("end", "4. " + rule4, "bulleted")
+text.place(relx=0.5, rely=0.6, anchor=CENTER)
+
+# Create User Frame
+uFWidth, uFHeight = 375, 100
+userFrame = Frame(window, width = uFWidth, height = uFHeight, bd = 4, relief = 'solid')
+userFrame.place(relx = 0.5, rely = 0.225, anchor=CENTER)
+
+# Create User Name
+userNameFont = tk.font.Font(family="Comic Sans MS", size=15, weight='bold')
+userName = Label(userFrame, text=" Input User: ",
+                 font=userNameFont, borderwidth=2, relief='solid').place(relx=0.20, rely=0.275, anchor=CENTER)
+userNameEntry = Entry(userFrame, width = 15, font = userNameFont)
+userNameEntry.place(relx=0.375, rely=0.275, anchor=W)
+
+''' # Create popUp check
         popUpFont = tk.font.Font(
             family="Comic Sans MS", size=11, weight='bold')
         self.popUp = tk.StringVar()
         self.checkLabel = Label(
             self.frame, textvariable=self.popUp, font=popUpFont, width=11)
         self.checkLabel.place(relx=0.88, rely=0.275, anchor=CENTER)
-        self.popUp.set(" ")
-        # Create add User Data Button
-        self.button = tk.Button(self.frame,  text='Add User', font=font,
+        self.popUp.set(" ")'''
+#my_str.set(" ")
+
+# Create add User Data Button
+'''self.button = tk.Button(self.frame,  text='Add User', font=font,
                                 width=10, command=lambda: self.addData())
         self.button.config(highlightthickness=0)
-        self.button.place(relx=0.5, rely=0.7, anchor=CENTER)
-    # Create data validation & mysql connection
+        self.button.place(relx=0.5, rely=0.7, anchor=CENTER)'''
 
-    def addData(self):
+# Create data validation & mysql connection
+''' def addData(self):
         flag_validation = True  # set the flag
         self.my_name = self.entry.get()  # read name
         # length of my_name < 2 or my_name contains numbers
@@ -103,180 +121,123 @@ class User(tk.Frame):
             self.popUp.set("Invalid Input")
             self.checkLabel.config(fg='red')   # foreground color
             self.checkLabel.config(bg='yellow')  # background color
-            self.checkLabel.config(borderwidth=2, relief='solid')
-    
-    def getPlayerID(self):
-        return self.entry.get()
+            self.checkLabel.config(borderwidth=2, relief='solid')'''
 
+# Create Dice Frame
+dFWidth, dFHeight = 375, 400
+diceFrame = Frame(window, width = dFWidth, height = dFHeight, bd = 4, relief = 'solid')
+diceFrame.place(relx = 0.5, rely = 0.525, anchor=CENTER)
 
-class Dice(tk.Frame):
-    def __init__(self, parent, *args, **kwargs):
-        tk.Frame.__init__(self, parent)
-
-        self.parent = parent
-        # Create Dice Frame
-        dFWidth, dFHeight = 375, 400
-        self.frame = Frame(parent, width=dFWidth,
-                           height=dFHeight, bd=4, relief='solid')
-        self.frame.place(relx=0.5, rely=0.525, anchor=CENTER)
-        # Create Dice List
-        self.diceList = initD.init_dice()
-        # Create Roll Button
-        font = tk.font.Font(
-            family="Comic Sans MS", size=15, weight='bold')
-        self.button = Button(self.frame, text='Roll Dice!', font=font,
-                             bd='10', command=lambda :[self.roll(), self.getAIMove()])
-        self.button.place(relx=0.5, rely=0.55, anchor=CENTER)
-        # Create User Game input
-        inputFont = tk.font.Font(
-            family="Comic Sans MS", size=15, weight='bold')
-        self.label = Label(self.frame, text=" What's Your Move?: ",
-                           font=inputFont, borderwidth=3, relief='solid')
-        self.label.place(relx=0.5, rely=0.68, anchor=CENTER)
-        self.entry = Entry(self.frame)
-        self.entry.place(relx=0.5, rely=0.775, anchor=CENTER)
-        # Create confirm input button
-        self.confirm = Button(self.frame, text='Confirm Move', font=inputFont,
-                              bd='10', command= self.getUserInput)
-        self.confirm.place(relx=0.5, rely=0.88, anchor=CENTER)
-    
-    def getAIMove(self):
-        self.parent.getAIMove()
-
-    # Get user input
-    def getUserInput(self):
-        self.entry.get()
-        
-    # Create Roll Function
-
-    def roll(self):
-        labelList = []
-        xVal, yVal = 0.4, 0.125
-        if len(labelList) != 0:
-            for i in range(len(labelList)):
-                labelList[i].destroy()
-        for i in range(5):
-            randomDice = self.diceList[random.randint(1, 6) - 1]
-            self.label = Label(self.frame, image=randomDice)
-            labelList.append(self.label)
-            self.label.place(relx=xVal, rely=yVal, anchor=CENTER)
-            if i % 2 == 0:
-                xVal += 0.2
+# Create Roll Function
+labelList = []
+diceList = initD.init_dice()
+def roll():
+    xVal, yVal = 0.4, 0.125
+    if len(labelList) != 0:
+        for i in range(len(labelList)):
+            labelList[i].destroy()
+    for i in range(5):
+        randomDice = diceList[random.randint(1, 6) - 1]
+        label = Label(diceFrame, image=randomDice)
+        labelList.append(label)
+        label.place(relx=xVal, rely=yVal, anchor=CENTER)
+        if i % 2 == 0:
+            xVal += 0.2
+        else:
+            if i != 3:
+                xVal -= 0.2
             else:
-                if i != 3:
-                    xVal -= 0.2
-                else:
-                    xVal -= 0.1
-                yVal += 0.15
+                xVal -= 0.1
+            yVal += 0.15
 
+# Create Roll Button
+btn = Button(diceFrame, text='Roll Dice!', bd='10', command=lambda :[roll(), getAIMove()])
+btn.place(relx=0.5, rely=0.55, anchor=CENTER)
 
-class Computer(tk.Frame):
-    def __init__(self, parent, *args, **kwargs):
-        tk.Frame.__init__(self, parent)
-        # Create AI Frame
-        aiFWidth, aiFHeight = 375, 100
-        self.frame = Frame(parent, width=aiFWidth,
-                           height=aiFHeight, bd=4, relief='solid')
-        self.frame.place(relx=0.5, rely=0.825, anchor=CENTER)
-        # Create AI Move Header
-        aiHeaderFont = tk.font.Font(
-            family="Comic Sans MS", size=15, weight='bold')
-        self.headerLabel = Label(self.frame, text=" Computer's Move: ",
-                                 font=aiHeaderFont, borderwidth=3, relief='solid')
-        self.headerLabel.place(relx=0.5, rely=0.275, anchor=CENTER)
-        # Create AI Move Entry
-        self.move = tk.StringVar()
-        self.moveLabel = Label(
-            self.frame, textvariable=self.move, font=aiHeaderFont)
-        self.moveLabel.place(relx=0.5, rely=0.7, anchor=CENTER)
-        self.move.set(" ")
+# Create User Game input
+userGInputFont = tk.font.Font(family="Comic Sans MS", size=15, weight='bold')
+userGInput = Label(diceFrame, text=" What's Your Move?: ",
+                   font=userGInputFont, borderwidth=3, relief='solid').place(relx=0.5, rely=0.675, anchor=CENTER)
+userGInputEntry = Entry(diceFrame)
+userGInputEntry.place(relx=0.5, rely=0.775, anchor=CENTER)
 
-    def getAIMove(self):
-        self.moveLabel.config(borderwidth=3, relief='solid')
-        self.move.set("hi")
+def getUserInput():
+    print(userGInputEntry.get())
+    return userGInputEntry.get()
 
-class Leaderboard(tk.Frame):
-    def __init__(self, parent, *args, **kwargs):
-        tk.Frame.__init__(self, parent)
-        # Create Leaderboard Frame
-        lbFWidth, lbFHeight = 400, 600
-        self.frame = Frame(parent, width=lbFWidth,
-                           height=lbFHeight, bd=7, relief='solid')
-        self.frame.place(relx=0.825, rely=0.5, anchor=CENTER)
-        # Create Leaderboard Header
-        headerFont = tk.font.Font(
-            family="Comic Sans MS", size=40, weight='bold')
-        self.label = Label(self.frame, text=" LeaderBoard ", font=headerFont,
-                           borderwidth=4, relief='solid')
-        self.label.place(relx=0.5, rely=0.1, anchor=CENTER)
-        # Create Refresh Leaderboard button
-        font = tk.font.Font(
-            family="Comic Sans MS", size=15, weight='bold')
-        btn = Button(self.frame, text='Refresh', font=font, bd=1,
-                     command=self.select_lead_tb)
-        btn.place(relx=0.75, rely=0.19, anchor=CENTER)
-    # Create Leaderboard Widget
+# Create Confirm Input Button
+def confirmInput():
+    btn = Button(diceFrame, text='Confirm Move', bd='10', command=getUserInput)
+    btn.place(relx=0.5, rely=0.875, anchor=CENTER)
 
-    def select_lead_tb(self):
-        conn = mysql.connector.connect(
-            user='root', password='ubercharge1', host='localhost', database='dice_game')
-        cursor = conn.cursor()
-        cursor.execute(
-            '''SELECT * FROM LEADERBOARD order by RANKING limit 0,10''')
+confirmInput()
 
-        xVal, yVal = 0.15, 0.25
-        self.columnNames = ["Rank", "Player", "Wins", "Win %", "Games"]
-        for columnName in self.columnNames:
-            self.nameRow = Label(self.frame, width=7, text=columnName,
-                                 relief='solid', anchor='c')
-            self.nameRow.place(relx=xVal, rely=yVal, anchor=CENTER)
+# Create AI Frame
+aiFWidth, aiFHeight = 375, 100
+aiFrame = Frame(window, width = aiFWidth, height = aiFHeight, bd = 4, relief = 'solid')
+aiFrame.place(relx = 0.5, rely = 0.825, anchor=CENTER)
+
+# Create AI Move Header
+aiHeaderFont = tk.font.Font(family="Comic Sans MS", size=15, weight='bold')
+aiHeader = Label(aiFrame, text=" Computer's Move: ", font=aiHeaderFont, borderwidth=3, relief='solid')
+aiHeader.place(relx=0.5, rely=0.275, anchor=CENTER)
+
+# Create AI Move Entry
+aiMove = tk.StringVar()
+aiMoveLabel = Label(aiFrame, textvariable= aiMove, font = aiHeaderFont)
+aiMoveLabel.place(relx=0.5, rely=0.7, anchor=CENTER)
+aiMove.set(" ")
+
+# Get AI Move
+def getAIMove():
+    aiMoveLabel.config(borderwidth=3, relief='solid')
+    aiMove.set("hi")
+
+# Create Leaderboard Frame
+lbFWidth, lbFHeight = 400, 600
+lBoardFrame = Frame(window, width = lbFWidth, height = lbFHeight, bd = 7, relief = 'solid')
+lBoardFrame.place(relx = 0.825, rely = 0.5, anchor=CENTER)
+
+# Create Leaderboard Header
+LBHeaderFont = tk.font.Font(family="Comic Sans MS", size=40, weight='bold')
+LBHeader = Label(lBoardFrame, text=" LeaderBoard ", font=headerFont,
+                 borderwidth=4, relief='solid')
+LBHeader.place(relx=0.5, rely=0.1, anchor=CENTER)
+
+# Create Leaderboard Widget
+def select_lead_tb():
+    conn = mysql.connector.connect(
+        user='root', password='ubercharge1', host='localhost', database='dice_game')
+    cursor = conn.cursor()
+    cursor.execute(
+        '''SELECT * FROM LEADERBOARD where PLAYER > '' limit 0,10''')
+
+    xVal, yVal = 0.15, 0.25
+    columnNames = ["Rank", "Player", "Wins", "Win %", "Games"]
+    for columnName in columnNames:
+        nameRow = Label(lBoardFrame, width=7, text=columnName,
+                        relief='flat', anchor='c')
+        nameRow.place(relx=xVal, rely=yVal, anchor=CENTER)
+        xVal += 0.25
+
+    xVal = 0.15
+    yVal += 0.05
+    for fields in cursor:
+        for j in range(1, len(fields)):
+            eRow = Label(lBoardFrame, width=7,
+                         text=fields[j], relief='flat', anchor='c')
+            eRow.place(relx=xVal, rely=yVal, anchor=CENTER)
             xVal += 0.25
-
         xVal = 0.15
         yVal += 0.05
-        for fields in cursor:
-            for j in range(1, len(fields)):
-                self.eRow = Label(self.frame, width=7,
-                                  text=fields[j], relief='flat', anchor='c')
-                self.eRow.place(relx=xVal, rely=yVal, anchor=CENTER)
-                xVal += 0.25
-            xVal = 0.15
-            yVal += 0.05
-        conn.close()
+    conn.close()
 
-class MainApplication(tk.Tk):
-    def __init__(self, *args, **kwargs):
-        super().__init__()
-        self.parent = tk.Frame(self)
-        # Configure root window
-        self.title('Bar Dice Game')
-        # Open window fullscreen
-        self.width = self.winfo_screenwidth()
-        self.height = self.winfo_screenheight()
-        self.geometry("%dx%d" % (self.width, self.height))
-        # Show Background using label
-        self.image = ImageTk.PhotoImage(Image.open(
-            imagePath + "background.png").resize((self.width, self.height)))
-        self.background = Label(self, image=self.image)
-        self.background.place(x=0, y=0)
-        # Fetch all classes
-        self.header = Header(self, self.parent, *args, **kwargs)
-        self.rules = Rules(self, self.parent, *args, **kwargs)
-        self.user = User(self, self.parent, *args, **kwargs)
-        self.computer = Computer(self, self.parent, *args, **kwargs)
-        self.dice = Dice(self, self.parent, *args, **kwargs)
-        self.leaderboard = Leaderboard(self, self.parent, *args, **kwargs)
-    
-    def playerID(self):
-        self.user.getPlayerID()
+''' select_lead_tb() '''
 
-    def getAIMove(self):
-        self.computer.getAIMove()
+''' # Create Refresh Leaderboard button
+btn = Button(lBoardFrame, text='Refresh', bd= 1, command=select_lead_tb)
+btn.place(relx=0.75, rely=0.185, anchor=CENTER)
+ '''
 
-def main():
-    app = MainApplication()
-    app.mainloop()
-
-if __name__ == "__main__":
-    main()
-
+#window.update()
+window.mainloop()

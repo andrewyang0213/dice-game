@@ -8,6 +8,9 @@ import ui as UI
 import DBHelper.ResultTable.gen_res_tb as resGen
 import DBHelper.ResultTable.ins_res_tb as resIns
 import DBHelper.ResultTable.sel_user_id as resID
+import DBHelper.RoundTable.gen_round_tb as rdGen
+import DBHelper.RoundTable.ins_round_tb as rdIns
+
 
 
 class database():
@@ -343,6 +346,7 @@ if __name__ == '__main__':
               rounds, "rounds! Let's begin!!!")
 
     while counter <= rounds - 1:
+        rdGen.gen_round_tb()
         call = (0, 0, 0)
         opened = False
         round = 0
@@ -368,8 +372,14 @@ if __name__ == '__main__':
         nBluff = 0
         d1String = ','.join(str(d) for d in d1)
         d2String = ','.join(str(d) for d in d2)
+
+        numRounds = 1
+
         while not opened:
             if (round > 0) and input("Do you want to open? y/n") == "y":
+                # user open = 1, ai open = 99
+                openVal = [1]
+                rdIns.insOpen(openVal)
                 if open(d1, d2, call):
                     print("YOU LOSE!")
                     winner = "AI"
@@ -392,9 +402,27 @@ if __name__ == '__main__':
                     val = int(b)
                 #1 player move, 0 computer move, 2nd two values -> move
                 call = (1, num, val)
+                
+                ''' print("round1: ")
+                rdIns.insTurn([call[0]])
+
+                move = list(call[1:])
+                moveString = ','.join(str(d) for d in move)
+                rdIns.updateMove(moveString, numRounds)
+                numRounds += 1 '''
+
                 gameList.append(call)
                 call, nBluff = play(callType(gameList), d2,
                                     gameList, total, call, nBluff)
+                
+                ''' turn = [call[0]]
+                move = list(call[1:])
+                moveString = ','.join(str(d) for d in move)
+                rdIns.insTurn(turn)
+                rdIns.updateMove(moveString, numRounds)
+
+                numRounds += 1 '''
+
                 if call[0] == 2:
                     if open(d1, d2, call):
                         stats += 1
@@ -404,9 +432,9 @@ if __name__ == '__main__':
                         winner = "AI"
                         print("YOU LOSE!")
                     #MYSQL insert
-
                     resIns.ins_res_tb(userID, d1String, d2String, winner)
-
+                    openVal = [99]
+                    rdIns.insOpen(openVal)
                     opened = True
                     print("game over: opened")
                     
