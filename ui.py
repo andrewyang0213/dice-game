@@ -29,7 +29,6 @@ class Header(tk.Frame):
                            borderwidth=7, relief='solid')
         self.label.place(relx=0.5, rely=0.1, anchor=CENTER)
 
-#hi
 class Rules(tk.Frame):
     def __init__(self, parent, *args, **kwargs):
         tk.Frame.__init__(self, parent)
