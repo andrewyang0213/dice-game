@@ -1,4 +1,4 @@
-# Liar's Dice Game
+# Liar's Dice Game (In-Progress)
 
 This project uses the TKinter library from Python to build a GUI for the Liar's Dice Game where the user can play against a computer that uses machine learning to gain an edge over the player over a large sample of games.
 
